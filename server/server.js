@@ -5,7 +5,7 @@ const net = require('net');
 var clients = [];
 
 // Start a TCP Server
-net.createServer(function (socket) {
+net.createServer(socket => {
 
   // Identify this client
   socket.name = socket.remoteAddress + ":" + socket.remotePort 
@@ -18,7 +18,7 @@ net.createServer(function (socket) {
   broadcast(socket.name + " joined the chat\n", socket);
 
   // Handle incoming messages from clients.
-  socket.on('data', function (data) {
+  socket.on('data', data => {
     broadcast(socket.name + "> " + data, socket);
   });
 
@@ -30,7 +30,7 @@ net.createServer(function (socket) {
   
   // Send a message to all clients
   function broadcast(message, sender) {
-    clients.forEach(function (client) {
+    clients.forEach(client => {
       // Don't want to send it to sender
       if (client === sender) return;
       client.write(message);
