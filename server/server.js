@@ -19,9 +19,12 @@ net
 
     // Handle incoming messages from clients.
     socket.on('data', data => {
+      socket.write('ok')
       broadcast(socket.name + '> ' + data, socket)
+      // console.log(JSON.parse(data))
     })
 
+    socket.write('Hello again ' + socket.name + ' !\n')
     // Remove the client from the list when it leaves
     socket.on('end', function() {
       clients.splice(clients.indexOf(socket), 1)
