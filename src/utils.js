@@ -26,8 +26,13 @@ class Requestor {
     message = typeof message === 'object' && JSON.stringify(message)
     this.socket.write(message)
     return new Promise(resolve => {
+      let response = ''
+      // console.log(response)
       this.socket.on('data', data => {
-        resolve(data.toLocaleString())
+        const res = data.toLocaleString()
+        console.log('data:', res)
+        response += res
+        if (res.includes('end')) resolve(response)
       })
     })
   }
@@ -45,10 +50,10 @@ const MessageTypes = {
  * @example
  *  makeGameMove([0, 2])
  */
-function makeGameMove(to) {
+function makeGameMove(target) {
   return {
     type: MessageTypes.move,
-    to
+    target
   }
 }
 
