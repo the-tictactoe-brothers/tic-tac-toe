@@ -19,33 +19,29 @@ let req = new Requestor()
     value: 'world'
   })
   console.log(res3)
-  // req
-  //   .request({
-  //     type: 'message',
-  //     value: 'hello'
-  //   })
-  //   .then(response => {
-  //     // req.socket.end()
-  //     console.log(response)
-  //   })
-
-  // req
-  //   .request({
-  //     type: 'message',
-  //     value: 'new'
-  //   })
-  //   .then(response => {
-  //     // req.socket.end()
-  //     console.log(response)
-  //   })
-
-  // req
-  //   .request({
-  //     type: 'message',
-  //     value: 'world'
-  //   })
-  //   .then(response => {
-  //     // req.socket.end()
-  //     console.log(response)
-  //   })
 })()
+
+// req
+//   .request({
+//     type: 'message',
+//     value: 'hello'
+//   })
+//   .then(response => {
+//     console.log(response)
+//     req
+//       .request({
+//         type: 'message',
+//         value: 'new'
+//       })
+//       .then(res2 => {
+//         console.log(res2)
+//         req
+//           .request({
+//             type: 'message',
+//             value: 'new'
+//           })
+//           .then(res3 => {
+//             console.log(res3)
+//           })
+//       })
+//   })
