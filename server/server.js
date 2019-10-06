@@ -13,19 +13,18 @@ net
     // Put this new client in the list
     clients.push(socket)
 
-    // Send a nice welcome message and announce
-    // socket.write('Welcome ' + socket.name + '\n')
     broadcast(socket.name + ' joined the chat\n', socket)
 
     // Handle incoming messages from clients.
     socket.on('data', data => {
-      socket.write('OK' + '\n' + 'end')
-      broadcast(socket.name + '> ' + data, socket)
-      // console.log(JSON.parse(data))
+      console.log('> ' + data.toLocaleString())
+      setTimeout(() => {
+        socket.write(`OK ${data.toLocaleString()} end` + '\n')
+      }, 1000)
+      // socket.pipe(socket)
+      // broadcast(socket.name + '> ' + data, socket)
     })
 
-    // socket.write('Hello again ' + socket.name + ' !\n')
-    // socket.write('end')
     // Remove the client from the list when it leaves
     socket.on('end', function() {
       clients.splice(clients.indexOf(socket), 1)
