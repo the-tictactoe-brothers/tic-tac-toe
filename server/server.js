@@ -19,7 +19,7 @@ net
     socket.on('data', data => {
       console.log('> ' + data.toLocaleString())
       setTimeout(() => {
-        socket.write(`OK ${data.toLocaleString()} end` + '\n')
+        socket.write(data.toLocaleString())
       }, 1000)
       // socket.pipe(socket)
       // broadcast(socket.name + '> ' + data, socket)
