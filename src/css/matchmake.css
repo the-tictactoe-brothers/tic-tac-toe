@@ -1,0 +1,33 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: auto;
+  max-width: 38rem;
+  padding: 2rem;
+  background-image: url("../maxresdefault.jpg")
+}
+
+.game-container {
+  padding: 0 30px;
+  padding-bottom: 30px;
+  width: 500px;
+  height: auto;
+  border: 2px solid black;
+}
+
+.players-table-div {
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+td {
+  width:100px;
+  text-align: center;
+}
+
+.player-cell {
+  width: 200px;
+}
+
+

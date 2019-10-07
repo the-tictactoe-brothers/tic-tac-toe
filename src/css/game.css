@@ -1,0 +1,71 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: auto;
+  max-width: 38rem;
+  padding: 2rem;
+  background-image: url("../maxresdefault.jpg")
+}
+
+.game-container {
+  width: 500px;
+  height: 595px;
+  border: 2px solid black
+}
+
+.game-info {
+  margin: 0px 10px;
+  width: 480px;
+  height: 100px;
+  display: inline-block
+}
+
+.game-name-rematch {
+  margin: 10px 0px;
+  width: 200px;
+  height: 80px;
+  float:left;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 80px;
+  border: 1px solid black
+}
+.oponent-div {
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 250px;
+  height: 40px;
+  float: right;
+  padding-left: 10px;
+  vertical-align: middle;
+  line-height: 40px;
+  border: 1px solid black
+}
+
+.turn-result-div {
+  margin-bottom: 10px;
+  margin-left: 10px;
+  width: 250px;
+  height: 40px;
+  float:right;
+  padding-left: 10px;
+  vertical-align: middle;
+  line-height: 40px;
+  border: 1px solid black
+}
+
+.game-board {
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  width: 480px;
+  height: 480px;
+  font-size:0px
+}
+
+.board-slot {
+  width: 158px;
+  height: 158px;
+  display: inline-block;
+  border: 1px solid black
+}
+
