@@ -5,6 +5,7 @@
   "description": "My Electron application description",
   "main": "src/index.js",
   "scripts": {
+    "dev": "npm run server & npm run start",
     "start": "electron-forge start",
     "server": "nodemon server/server.js",
     "package": "electron-forge package",
