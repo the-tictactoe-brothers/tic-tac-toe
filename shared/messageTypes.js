@@ -3,7 +3,8 @@ const MessageTypes = {
   move: 'move', // mensagem de nova jogada ao servidor
   endGame: 'endGame',
   err: 'err',
-  listUsers: 'listUsers'
+  listUsers: 'listUsers',
+  start: 'start' // mesagem enviada ao iniciar um jogo
 }
 
 module.exports = MessageTypes
