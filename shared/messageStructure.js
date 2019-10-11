@@ -1,35 +1,29 @@
-function messageNewUser(message, nickname) {
-  let newuser = {
-    message,
-    nickname
-  }
-  return newUser
-}
-
-function messageStartGame(message, nickname) {
-  let startGame = {
-    message,
-    nicknamen
-  }
-  return starGame
-}
-
-obj = {
-  messageNewUser,
-  messageStartGame
-}
-
-module.exports = obj
-
 /** README
  * Para acessar um dos objetos e seus atributos,
- * na classe server tu usa a variavel MessageStructure(Linha 4).
+ * na classe server, crie um obj, que recebe o retorna de uma função:
  *
- * EX: MessageStructure.starGame.replyMessage
+ * EX: const obj = MessageStructure.MessageStructure('Acepted', 'Parzival')
  *
- * Inicialmente os atributos do objeto (EX:startGame) vão estar vazios.
- *
- * Depois de adicionar os valores deles, o objeto (EX:startGame) pode ser
+ * Depois de criar o objeto e enviar os parametros para a função, o objeto pode ser
  * passado como resposta, depois de transformalo em string.
  *
  */
+
+function messageNewUser(message, nickname) {
+  return {
+    message,
+    nickname
+  }
+}
+
+function messageStartGame(message, nickname) {
+  return {
+    message,
+    nickname
+  }
+}
+
+module.exports = {
+  messageNewUser,
+  messageStartGame
+}
