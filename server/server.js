@@ -1,6 +1,7 @@
 // Load the TCP Library
 const net = require('net') // net module -: provides an asynchronous network API
 const MessageTypes = require('../shared/messageTypes')
+const MessageStructure = require('../shared/messageStructure')
 
 let waitList = [] //List of users waiting to play
 let playingList = []
