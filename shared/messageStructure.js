@@ -1,3 +1,5 @@
+const { maybe } = require('./utils')
+
 /** README
  * Para acessar um dos objetos e seus atributos,
  * na classe server, crie um obj, que recebe o retorna de uma função:
@@ -27,6 +29,13 @@ function messageErr(message /*, payload*/) {
   return JSON.stringify({
     message /*,
     payload: {...payload}*/
+  })
+}
+
+function messageError(message, payload) {
+  return JSON.stringify({
+    message,
+    ...maybe('payload', payload)
   })
 }
 
