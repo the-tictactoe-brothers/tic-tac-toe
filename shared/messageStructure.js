@@ -10,20 +10,28 @@
  */
 
 function messageNewUser(message, nickname) {
-  return {
+  return JSON.stringify({
     message,
     nickname
-  }
+  })
 }
 
 function messageStartGame(message, nickname) {
-  return {
+  return JSON.stringify({
     message,
     nickname
-  }
+  })
+}
+
+function messageErr(message /*, payload*/) {
+  return JSON.stringify({
+    message /*,
+    payload: {...payload}*/
+  })
 }
 
 module.exports = {
   messageNewUser,
-  messageStartGame
+  messageStartGame,
+  messageErr
 }
