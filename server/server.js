@@ -31,9 +31,9 @@ net
                 socket
               }
               waitList.push(user)
-              socket.write(JSON.stringify(MessageStructure.messageNewUser('acepted', aux.nickname)))
+              socket.write(MessageStructure.messageNewUser('accepted', aux.nickname))
             } else {
-              socket.write(JSON.stringify(MessageStructure.messageNewUser('denied', aux.nickname)))
+              socket.write(MessageStructure.messageNewUser('denied'))
             }
           } else {
             // When the User create the nickname -> add Object user in the waitList
@@ -42,12 +42,13 @@ net
               socket
             }
             waitList.push(user)
-            socket.write(JSON.stringify(MessageStructure.messageNewUser('acepted', aux.nickname)))
+            socket.write(MessageStructure.messageNewUser('accepted', aux.nickname))
           }
           break
         case MessageTypes.move:
           break
         case MessageTypes.start:
+          // usar find
           break
         case MessageTypes.err:
           break
