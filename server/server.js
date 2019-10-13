@@ -18,16 +18,17 @@ net
     // Wait for user messages
     socket.on('data', data => {
       let aux = JSON.parse(data) //convert string(JSON) to obj
+      const nicknames = waitList.map(user => user.nickname)
 
       switch (aux.type) {
         case MessageTypes.newUser:
           // check if list is empty
           if (waitList.length) {
             for (i = 0; i < waitList.length; i++) {
-              if (!waitList[i].nickname == data.nickname) {
+              if (nicknames.includes(aux.nickname)) {
                 // When the User create the nickname -> add Object user in the waitList
                 user = {
-                  nickname: data.nickname,
+                  nickname: aux.nickname,
                   socket
                 }
                 waitList.push(user)
