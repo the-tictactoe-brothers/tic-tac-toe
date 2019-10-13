@@ -24,30 +24,25 @@ net
         case MessageTypes.newUser:
           // check if list is empty
           if (waitList.length) {
-            for (i = 0; i < waitList.length; i++) {
-              if (nicknames.includes(aux.nickname)) {
-                // When the User create the nickname -> add Object user in the waitList
-                user = {
-                  nickname: aux.nickname,
-                  socket
-                }
-                waitList.push(user)
-                // mensagem de resposta ao cliente
-                socket.write('Accepted')
-                break
-              } else {
-                socket.write('Denied')
+            if (nicknames.includes(aux.nickname)) {
+              // When the User create the nickname -> add Object user in the waitList
+              user = {
+                nickname: aux.nickname,
+                socket
               }
+              waitList.push(user)
+              socket.write(JSON.stringify(MessageStructure.messageNewUser('acepted', aux.nickname)))
+            } else {
+              socket.write(JSON.stringify(MessageStructure.messageNewUser('denied', aux.nickname)))
             }
           } else {
             // When the User create the nickname -> add Object user in the waitList
             user = {
-              nickname: data.nickname,
+              nickname: aux.nickname,
               socket
             }
             waitList.push(user)
-            // adicionar mensagem de resposta ao cliente
-            socket.write('Accepted')
+            socket.write(JSON.stringify(MessageStructure.messageNewUser('acepted', aux.nickname)))
           }
           break
         case MessageTypes.move:
