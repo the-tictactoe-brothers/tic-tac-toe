@@ -21,6 +21,6 @@ module.exports = {
   rules: {
     'arrow-parens': "off",
     'no-console': 'off',
-    'max-len': ['error', { code: 80 }]
+    'max-len': ['error', { code: 100 }]
   }
 }

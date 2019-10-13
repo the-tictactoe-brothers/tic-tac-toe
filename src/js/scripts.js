@@ -20,9 +20,6 @@ async function addNewUser(evt) {
     const errorMessage = document.createElement('div')
     errorMessage.style.color = 'red'
     errorMessage.textContent = 'Nickname already being used!'
-    nickForm.insertBefore(
-      errorMessage,
-      document.getElementById('nick-field').nextSibling
-    )
+    nickForm.insertBefore(errorMessage, document.getElementById('nick-field').nextSibling)
   }
 }
