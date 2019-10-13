@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>Best Tic Tac Toe of ZA WARUDO</title>
     <link rel="stylesheet" href="./css/index.css">
-    <script src="game.js"></script>
+    <script src="js/scripts.js"></script>
   </head>
   <body>
       <div class="game-container">
         <div class="nick-form">
-          <form id="nick-form" onsubmit="addNewUser()">
+          <form id="nick-form" onsubmit="addNewUser(event)">
             <label>Input your nickname </label><br/>
             <input type="text" name="nickname" id="nick-field"/><br/><br/>
             <input type="submit" value="Confirm"/>

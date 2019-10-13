@@ -1,11 +1,14 @@
 const { app, BrowserWindow } = require('electron')
 const Requestor = require('./utils/requestor')
-const messageTypes = require('../shared/messageTypes')
+const MessageTypes = require('../shared/messageTypes')
+const path = require('path')
+
+require('electron-reload')(__dirname)
 
 // set global variables
 global.shared = {
-  req: new Requestor(),
-  messageTypes
+  // req: new Requestor(),
+  MessageTypes
 }
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -64,6 +67,3 @@ app.on('activate', () => {
     createWindow()
   }
 })
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
