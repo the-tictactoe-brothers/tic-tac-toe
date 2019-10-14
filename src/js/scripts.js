@@ -55,15 +55,44 @@ function onClick(e) {
 }
 
 async function getUsersList() {
-  let req = new Requestor()
   const res = await req.request({
     type: MessageTypes.listUsers
   })
   return res
 }
 
+function scrap(users) {
+  spl_users = users.split('}')
+  users_list = []
+
+  for (const i in spl_users) {
+    if (i == spl_users.length - 1) {
+      break
+    }
+
+    const begin = spl_users[i].search('nickname') + 11
+    const end = spl_users[i].search('socket') - 3
+    const user = spl_users[i].slice(begin, end)
+
+    users_list.push(user)
+  }
+
+  return users_list
+}
+
 async function populateUserList() {
   users = await getUsersList()
-  document.getElementById('players-table-id').innerHTML +=
-    '<tr><td>' + users + "</td><td><a href='game.html'>Challenge</a></td></tr>"
+  users_list = scrap(users)
+
+  for (const i in users_list) {
+    document.getElementById('players-table-id').innerHTML += '<tr><td>' + users_list[i] + '</td>'
+    document.getElementById('players-table-id').innerHTML +=
+      '<td><a id="challenge" href="game.html">Challenge</a></td></tr>'
+  }
+
+  document.getElementById('challenge').onclick = async function() {
+    // const req = await req.Request({
+    //   type:
+    // })
+  }
 }
