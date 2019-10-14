@@ -61,38 +61,42 @@ async function getUsersList() {
   return res
 }
 
-function scrap(users) {
-  spl_users = users.split('}')
-  users_list = []
+// function scrap(users) {
+//   spl_users = users.split('}')
+//   users_list = []
 
-  for (const i in spl_users) {
-    if (i == spl_users.length - 1) {
-      break
-    }
+//   for (const i in spl_users) {
+//     if (i == spl_users.length - 1) {
+//       break
+//     }
 
-    const begin = spl_users[i].search('nickname') + 11
-    const end = spl_users[i].search('socket') - 3
-    const user = spl_users[i].slice(begin, end)
+//     const begin = spl_users[i].search('nickname') + 11
+//     const end = spl_users[i].search('socket') - 3
+//     const user = spl_users[i].slice(begin, end)
 
-    users_list.push(user)
-  }
+//     users_list.push(user)
+//   }
 
-  return users_list
-}
+//   return users_list
+// }
 
 async function populateUserList() {
   users = await getUsersList()
-  users_list = scrap(users)
+  //users_list = scrap(users)
 
   for (const i in users_list) {
-    document.getElementById('players-table-id').innerHTML += '<tr><td>' + users_list[i] + '</td>'
+    document.getElementById('players-table-id').innerHTML += '<tr><td>' + users_list[i].nickname + '</td>'
     document.getElementById('players-table-id').innerHTML +=
-      '<td><a id="challenge" href="game.html">Challenge</a></td></tr>'
+      '<td><button class="challenge-cell" id="challenge" onclick="startGame(this)">Challenge</button></td></tr>'
   }
+}
 
-  document.getElementById('challenge').onclick = async function() {
-    // const req = await req.Request({
-    //   type:
-    // })
-  }
+function startGame(element) {
+  const index = element.closest('tr').rowIndex
+  opponent = document.getElementById('players-table-id').rows[index].cells[0].innerHTML
+
+  const req = await req.Request({
+    type: MessageTypes.start,
+    payload: opponent
+  })
 }
