@@ -3,13 +3,25 @@ const net = require('net') // net module -: provides an asynchronous network API
 const MessageTypes = require('../shared/messageTypes')
 const MessageStructure = require('../shared/messageStructure')
 
-let waitList = [] //List of users waiting to play
+function onclose(server, signal, callback) {
+  return () => {
+    console.log('Server closing...')
+    server.close(callback && callback(signal))
+  }
+}
+
+let waitList = [
+  {
+    nickname: 'rui',
+    socket: null
+  }
+] // List of users waiting to play
 let playingList = []
 
 // Start a TCP Server
-net
+const server = net
   .createServer(socket => {
-    socket.setEncoding('utf8') //change the recieved type of data from buffer to string
+    socket.setEncoding('utf8') // change the recieved type of data from buffer to string
 
     // Identify this client
     socket.name = socket.remoteAddress + ':' + socket.remotePort
@@ -17,32 +29,32 @@ net
 
     // Wait for user messages
     socket.on('data', data => {
-      let aux = JSON.parse(data) //convert string(JSON) to obj
+      let aux = JSON.parse(data) // convert string(JSON) to obj
       const nicknames = waitList.map(user => user.nickname)
 
       switch (aux.type) {
         case MessageTypes.newUser:
           // check if list is empty
           if (waitList.length) {
-            if (nicknames.includes(aux.nickname)) {
+            if (!nicknames.includes(aux.payload)) {
               // When the User create the nickname -> add Object user in the waitList
               const user = {
-                nickname: aux.nickname,
+                nickname: aux.payload,
                 socket
               }
               waitList.push(user)
-              socket.write(MessageStructure.messageNewUser('accepted', aux.nickname))
+              socket.write(MessageStructure.messageNewUser(MessageTypes.accepted, aux.payload))
             } else {
-              socket.write(MessageStructure.messageNewUser('denied'))
+              socket.write(MessageStructure.messageNewUser(MessageTypes.denied))
             }
           } else {
             // When the User create the nickname -> add Object user in the waitList
             const user = {
-              nickname: aux.nickname,
+              nickname: aux.payload,
               socket
             }
             waitList.push(user)
-            socket.write(MessageStructure.messageNewUser('accepted', aux.nickname))
+            socket.write(MessageStructure.messageNewUser(MessageTypes.accepted, aux.payload))
           }
           break
         case MessageTypes.move:
@@ -63,3 +75,11 @@ net
     })
   })
   .listen(5000)
+
+process.once('SIGUSR2', onclose(server, 'SIGUSR2'))
+process.once(
+  'SIGINT',
+  onclose(server, 'SIGINT', signal => {
+    process.kill(process.pid, signal)
+  })
+)
