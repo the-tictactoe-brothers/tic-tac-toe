@@ -98,6 +98,12 @@ const server = net
           }
           break
         case MessageTypes.start:
+          if (
+            waitList.find(user => user.nickname === aux.nickname) &&
+            waitList.find(user => user.nickname === aux2.nickname)
+          ) {
+          }
+          // usar find
           break
         case MessageTypes.err:
           break
