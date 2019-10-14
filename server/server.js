@@ -37,7 +37,6 @@ const server = net
           // check if list is empty
           if (waitList.length) {
             if (!nicknames.includes(aux.payload)) {
-              console.log(aux.payload)
               // When the User create the nickname -> add Object user in the waitList
               const user = {
                 nickname: aux.payload,
@@ -46,7 +45,6 @@ const server = net
               waitList.push(user)
               socket.write(MessageStructure.messageNewUser(MessageTypes.accepted, aux.payload))
             } else {
-              console.log('denied!')
               socket.write(MessageStructure.messageNewUser(MessageTypes.denied))
             }
           } else {
