@@ -20,8 +20,7 @@ class Requestor {
     return new Promise(resolve => {
       this.socket.write(message)
       this.socket.on('data', data => {
-        const response = data.toLocaleString()
-        if (response.includes(message)) resolve(JSON.parse(data.toLocaleString()))
+        resolve(JSON.parse(data.toLocaleString()))
       })
     })
   }

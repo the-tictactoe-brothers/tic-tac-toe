@@ -7,7 +7,7 @@ require('electron-reload')(__dirname)
 
 // set global variables
 global.shared = {
-  // req: new Requestor(),
+  req: new Requestor(),
   MessageTypes
 }
 
