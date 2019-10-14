@@ -30,4 +30,15 @@ td {
   width: 200px;
 }
 
+.challenge-cell {
+  border: none;
+  background:none;
+  outline:none;
+  font-size:14px
+}
+
+.challenge-cell:hover {
+  cursor:pointer
+}
+
 
