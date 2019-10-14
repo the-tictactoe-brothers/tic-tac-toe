@@ -26,7 +26,7 @@ net
           if (waitList.length) {
             if (nicknames.includes(aux.nickname)) {
               // When the User create the nickname -> add Object user in the waitList
-              user = {
+              const user = {
                 nickname: aux.nickname,
                 socket
               }
@@ -37,7 +37,7 @@ net
             }
           } else {
             // When the User create the nickname -> add Object user in the waitList
-            user = {
+            const user = {
               nickname: aux.nickname,
               socket
             }

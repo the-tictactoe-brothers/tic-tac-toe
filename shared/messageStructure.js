@@ -25,13 +25,6 @@ function messageStartGame(message, nickname) {
   })
 }
 
-function messageErr(message /*, payload*/) {
-  return JSON.stringify({
-    message /*,
-    payload: {...payload}*/
-  })
-}
-
 function messageError(message, payload) {
   return JSON.stringify({
     message,
@@ -42,5 +35,5 @@ function messageError(message, payload) {
 module.exports = {
   messageNewUser,
   messageStartGame,
-  messageErr
+  messageError
 }
