@@ -4,7 +4,9 @@ const MessageTypes = {
   endGame: 'endGame',
   err: 'err',
   listUsers: 'listUsers',
-  start: 'start' // mesagem enviada ao iniciar um jogo
+  start: 'start', // mesagem enviada ao iniciar um jogo
+  accepted: 'accepted',
+  denied: 'denied'
 }
 
 module.exports = MessageTypes
