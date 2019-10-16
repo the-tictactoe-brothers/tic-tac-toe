@@ -53,7 +53,7 @@ body {
   border: 1px solid black
 }
 
-.game-board {
+#game-board {
   margin-right: 10px;
   margin-left: 10px;
   margin-bottom: 10px;
