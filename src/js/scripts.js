@@ -25,3 +25,39 @@ async function addNewUser(evt) {
     nickForm.insertBefore(errorMessage, document.getElementById('nick-field').nextSibling)
   }
 }
+
+function createGrid(n, m) {
+  const board = document.getElementById('game-board')
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      const slot = document.createElement('div')
+      slot.setAttribute('id', `slot-${i}-${j}`)
+      slot.classList.add('board-slot')
+      slot.addEventListener('click', evt => onClick(evt))
+      board.appendChild(slot)
+    }
+  }
+}
+
+function onClick(e) {
+  const id = e.target.id
+  const regex = /slot-([0-9])-([0-9])/g
+  const groups = regex.exec(id)
+  groups.shift()
+  const [x, y] = groups
+  console.log(x, y)
+}
+
+async function getUsersList() {
+  let req = new Requestor()
+  const res = await req.request({
+    type: MessageTypes.listUsers
+  })
+  return res
+}
+
+async function populateUserList() {
+  users = await getUsersList()
+  document.getElementById('players-table-id').innerHTML +=
+    '<tr><td>' + users + "</td><td><a href='game.html'>Challenge</a></td></tr>"
+}
