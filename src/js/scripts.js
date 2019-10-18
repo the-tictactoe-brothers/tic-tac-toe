@@ -61,35 +61,31 @@ async function getUsersList() {
   return res
 }
 
-// function scrap(users) {
-//   spl_users = users.split('}')
-//   users_list = []
-
-//   for (const i in spl_users) {
-//     if (i == spl_users.length - 1) {
-//       break
-//     }
-
-//     const begin = spl_users[i].search('nickname') + 11
-//     const end = spl_users[i].search('socket') - 3
-//     const user = spl_users[i].slice(begin, end)
-
-//     users_list.push(user)
-//   }
-
-//   return users_list
-// }
-
 async function populateUserList() {
   users = await getUsersList()
-  //users_list = scrap(users)
 
-  for (const i in users_list) {
+  // users_list = []
+  // spl_users = users.split('}')
+
+  // for (const i in spl_users) {
+  //   if (i == spl_users.length - 1) {
+  //     break
+  //   }
+
+  //   const begin = spl_users[i].search('nickname') + 11
+  //   const end = spl_users[i].search('socket') - 3
+  //   const user = spl_users[i].slice(begin, end)
+
+  //   users_list.push(user)
+  // }
+
+  for (const i in users) {
     document.getElementById('players-table-id').innerHTML +=
-      '<tr><td>' + users_list[i].nickname + '</td>'
-    document.getElementById('players-table-id').innerHTML +=
+      '<tr><td>' +
+      users[i].nickname +
+      '</td>' +
       '<td>' +
-      '<button class="challenge-cell" id="challenge" onclick="startGame(this)">Challenge</button>' +
+      '<button class="challenge-cell" id="challenge" onclick="challengePlayer(this)">Challenge</button>' +
       '</td></tr>'
   }
 }
@@ -98,11 +94,27 @@ async function challengePlayer(element) {
   const index = element.closest('tr').rowIndex
   opponent = document.getElementById('players-table-id').rows[index].cells[0].innerHTML
 
+  //alert(opponent)
+
   const req = await req.Request({
     type: MessageTypes.start,
     payload: opponent
   })
 
-  const url = path.resolve(__dirname, 'html/game.html')
-  currentWindow.loadURL(`file://${url}`)
+  console.log(res)
+
+  const gameCont = document.getElementById('game-container')
+  if (res.message === MessageTypes.accepted) {
+    const url = path.resolve(__dirname, 'game.html')
+    currentWindow.loadURL(`file://${url}`)
+  } else {
+    const errorMessage = document.createElement('p')
+    errorMessage.style.color = 'red'
+    errorMessage.style.textAlign = 'center'
+    errorMessage.textContent = 'Failed to start game'
+    gameCont.insertBefore(errorMessage, gameCont.childNodes[2])
+    setTimeout(() => {
+      gameCont.removeChild(errorMessage)
+    }, 1000)
+  }
 }
