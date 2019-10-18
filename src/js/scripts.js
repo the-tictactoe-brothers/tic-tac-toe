@@ -85,13 +85,16 @@ async function populateUserList() {
   //users_list = scrap(users)
 
   for (const i in users_list) {
-    document.getElementById('players-table-id').innerHTML += '<tr><td>' + users_list[i].nickname + '</td>'
     document.getElementById('players-table-id').innerHTML +=
-      '<td><button class="challenge-cell" id="challenge" onclick="startGame(this)">Challenge</button></td></tr>'
+      '<tr><td>' + users_list[i].nickname + '</td>'
+    document.getElementById('players-table-id').innerHTML +=
+      '<td>' +
+      '<button class="challenge-cell" id="challenge" onclick="startGame(this)">Challenge</button>' +
+      '</td></tr>'
   }
 }
 
-function startGame(element) {
+async function challengePlayer(element) {
   const index = element.closest('tr').rowIndex
   opponent = document.getElementById('players-table-id').rows[index].cells[0].innerHTML
 
@@ -99,4 +102,7 @@ function startGame(element) {
     type: MessageTypes.start,
     payload: opponent
   })
+
+  const url = path.resolve(__dirname, 'html/game.html')
+  currentWindow.loadURL(`file://${url}`)
 }
