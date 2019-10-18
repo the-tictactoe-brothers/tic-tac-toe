@@ -60,13 +60,13 @@ async function onClick(e) {
   const groups = regex.exec(id)
   groups.shift()
   const [x, y] = groups
+  const username = localStorage.getItem('username')
   const res = await req.request({
     type: MessageTypes.move,
-    targetUser: 'user1',
+    targetUser: username === 'joao' ? 'jose' : 'joao',
     payload: [x, y]
   })
   console.log(x, y)
-  const username = localStorage.getItem('username')
   console.log(`Server's response for ${username}: ${res.message}`)
 }
 
