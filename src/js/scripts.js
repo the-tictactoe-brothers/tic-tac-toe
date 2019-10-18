@@ -19,7 +19,8 @@ async function addNewUser(evt) {
   if (res.type === MessageTypes.accepted) {
     const url = path.resolve(__dirname, 'html/matchmake.html')
     currentWindow.loadURL(`file://${url}`)
-    localStorage.setItem('username', res.nickname)
+    console.log(res.nickname)
+    remote.getGlobal('shared').username = res.nickname
   } else {
     const errorMessage = document.createElement('p')
     errorMessage.style.color = 'red'
@@ -37,7 +38,12 @@ async function addNewUser(evt) {
 function initGame() {
   createGrid(3, 3)
   req.registerAsyncCallback(message => {
-    console.log(`Received oponentMove:`, message)
+    // console.log(`Received oponentMove:`, message)
+    const [x, y] = message.payload
+    console.log(x, y)
+    const slot = document.getElementById(`slot-${x}-${y}`)
+    const shape = remote.getGlobal('shared').username === 'jose' ? 'cross' : 'circle'
+    slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
   })
 }
 
@@ -60,13 +66,18 @@ async function onClick(e) {
   const groups = regex.exec(id)
   groups.shift()
   const [x, y] = groups
-  const username = localStorage.getItem('username')
+  const username = remote.getGlobal('shared').username
   const res = await req.request({
     type: MessageTypes.move,
     targetUser: username === 'joao' ? 'jose' : 'joao',
     payload: [x, y]
   })
   console.log(x, y)
+
+  // add image
+  const slot = document.getElementById(id)
+  const shape = username === 'joao' ? 'cross' : 'circle'
+  slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
   console.log(`Server's response for ${username}: ${res.message}`)
 }
 
