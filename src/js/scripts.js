@@ -15,11 +15,11 @@ async function addNewUser(evt) {
     payload: document.getElementById('nick-field').value
   })
 
-  console.log(res)
   const nickForm = document.getElementById('nick-form')
   if (res.type === MessageTypes.accepted) {
     const url = path.resolve(__dirname, 'html/matchmake.html')
     currentWindow.loadURL(`file://${url}`)
+    localStorage.setItem('username', res.nickname)
   } else {
     const errorMessage = document.createElement('p')
     errorMessage.style.color = 'red'
@@ -32,6 +32,13 @@ async function addNewUser(evt) {
       wrapper.innerHTML = '<br /><br />'
     }, 1000)
   }
+}
+
+function initGame() {
+  createGrid(3, 3)
+  req.registerAsyncCallback(message => {
+    console.log(`Received oponentMove:`, message)
+  })
 }
 
 function createGrid(n, m) {
@@ -47,13 +54,20 @@ function createGrid(n, m) {
   }
 }
 
-function onClick(e) {
+async function onClick(e) {
   const id = e.target.id
   const regex = /slot-([0-9])-([0-9])/g
   const groups = regex.exec(id)
   groups.shift()
   const [x, y] = groups
+  const res = await req.request({
+    type: MessageTypes.move,
+    targetUser: 'user1',
+    payload: [x, y]
+  })
   console.log(x, y)
+  const username = localStorage.getItem('username')
+  console.log(`Server's response for ${username}: ${res.message}`)
 }
 
 async function getUsersList() {
