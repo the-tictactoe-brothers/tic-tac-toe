@@ -85,6 +85,7 @@ async function populateUserList() {
       users[i].nickname +
       '</td>' +
       '<td>' +
+      // eslint-disable-next-line max-len
       '<button class="challenge-cell" id="challenge" onclick="challengePlayer(this)">Challenge</button>' +
       '</td></tr>'
   }
