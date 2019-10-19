@@ -98,10 +98,19 @@ const server = net
           }
           break
         case MessageTypes.start:
-          if (
-            waitList.find(user => user.nickname === aux.nickname) &&
-            waitList.find(user => user.nickname === aux2.nickname)
-          ) {
+          const challenged = waitList.find(user => user.nickname === aux.payload)
+          const challenger = waitList.find(user => user.socket === socket)
+          if (challeged && challenger) {
+            let removed = waitList.splice(waitList.indexOf(challegend), 1)
+            playingList.push(removed[0])
+            removed = waitList.splice(waitList.indexOf(challenger), 1)
+            playingList.push(removed[0])
+
+            socket.write(MessageStructure.messageStart(MessageTypes.accepted, challenger))
+            challenged.socket.write(MessageStructure.asyncStart(MessageTypes.accepted, challenged))
+          } else {
+            //Menssagem para o usuário desafiante caso negado
+            socket.write(MessageStructure.messageStart(MessageTypes.denied))
           }
           // usar find
           break
