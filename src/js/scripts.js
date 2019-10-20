@@ -6,8 +6,6 @@ const MessageTypes = remote.getGlobal('shared').MessageTypes
 const currentWindow = remote.getCurrentWindow()
 const req = remote.getGlobal('shared').req
 
-req.socket.on('data', data => {})
-
 async function addNewUser(evt) {
   evt.preventDefault()
   const res = await req.request({
