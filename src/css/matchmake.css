@@ -34,7 +34,8 @@ td {
   border: none;
   background:none;
   outline:none;
-  font-size:14px
+  font-size:14px;
+  color:#a42206;
 }
 
 .challenge-cell:hover {

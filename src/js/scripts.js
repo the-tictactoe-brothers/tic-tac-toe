@@ -70,8 +70,7 @@ async function populateUserList() {
       users[i].nickname +
       '</td>' +
       '<td>' +
-      // eslint-disable-next-line max-len
-      '<button class="challenge-cell" id="challenge" onclick="challengePlayer(this)">Challenge</button>' +
+      '<button class="challenge-cell" onclick="challengePlayer(this)">Challenge</button>' +
       '</td></tr>'
   }
 }
@@ -80,8 +79,6 @@ async function challengePlayer(element) {
   const index = element.closest('tr').rowIndex
   opponent = document.getElementById('players-table-id').rows[index].cells[0].innerHTML
 
-  //alert(opponent)
-
   const req = await req.Request({
     type: MessageTypes.start,
     payload: opponent
@@ -89,18 +86,10 @@ async function challengePlayer(element) {
 
   console.log(res)
 
-  const gameCont = document.getElementById('game-container')
   if (res.message === MessageTypes.accepted) {
     const url = path.resolve(__dirname, 'game.html')
     currentWindow.loadURL(`file://${url}`)
   } else {
-    const errorMessage = document.createElement('p')
-    errorMessage.style.color = 'red'
-    errorMessage.style.textAlign = 'center'
-    errorMessage.textContent = 'Failed to start game'
-    gameCont.insertBefore(errorMessage, gameCont.childNodes[2])
-    setTimeout(() => {
-      gameCont.removeChild(errorMessage)
-    }, 1000)
+    alert('Failed to start game')
   }
 }
