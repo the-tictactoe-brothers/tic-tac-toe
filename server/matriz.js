@@ -4,19 +4,19 @@ const MessageTypes = require('../shared/messageTypes')
  *
  * let matriz = [
  *   [
- *     [0,undefined],
- *     [0,undefined],
- *     [0,undefined]
+ *     undefined,
+ *     undefined,
+ *     undefined
  *   ],
  *   [
- *     [0,undefined],
- *     [0,undefined],
- *     [0,undefined]
+ *     undefined,
+ *     undefined,
+ *     undefined
  *   ],
  *   [
- *     [0,undefined],
- *     [0,undefined],
- *     [0,undefined]
+ *     undefined,
+ *     undefined,
+ *     undefined
  *   ],
  * ];
  *
@@ -24,7 +24,7 @@ const MessageTypes = require('../shared/messageTypes')
 
 let matriz = Array.from(
   { length: 3 },
-  coluna => (coluna = Array.from({ length: 3 }, linha => (linha = [0, undefined])))
+  coluna => (coluna = Array.from({ length: 3 }, linha => (linha = undefined)))
 )
 
 /*
@@ -37,7 +37,7 @@ const data = {
 function printMatriz() {
   for (let i = 0; i < matriz.length; i++) {
     for (let j = 0; j < matriz[i].length; j++) {
-      console.log(matriz[i][j][0])
+      console.log(matriz[i][j])
     }
   }
 }
@@ -46,12 +46,11 @@ function addPosition(position, symb) {
   let x = position[0]
   let y = position[1]
 
-  if (matriz[x][y][0]) {
-    // if value != 0
+  if (matriz[x][y]) {
+    // if value != undefined
     return MessageTypes.denied
   } else {
-    matriz[x][y][0] = 1
-    matriz[x][y][1] = symb
+    matriz[x][y] = symb
     return MessageTypes.accepted
   }
 }
@@ -60,6 +59,5 @@ function rmvPosition(position) {
   let x = position[0]
   let y = position[1]
 
-  matriz[x][y][0] = 0
-  matriz[x][y][1] = undefined
+  matriz[x][y] = undefined
 }

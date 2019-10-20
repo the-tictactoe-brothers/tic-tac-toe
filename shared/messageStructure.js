@@ -11,23 +11,23 @@ const { maybe } = require('./utils')
  *
  */
 
-function messageNewUser(message, nickname) {
+function messageNewUser(type, nickname) {
   return JSON.stringify({
-    message,
+    type,
     nickname
   })
 }
 
-function messageStartGame(message, nickname) {
+function messageStartGame(type, nickname) {
   return JSON.stringify({
-    message,
+    type,
     nickname
   })
 }
 
-function messageError(message, payload) {
+function messageError(type, payload) {
   return JSON.stringify({
-    message,
+    type,
     ...maybe('payload', payload)
   })
 }

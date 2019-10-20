@@ -15,7 +15,9 @@ let waitList = [
     nickname: 'rui',
     socket: null
   }
-] // List of users waiting to play
+]
+
+// List of users waiting to play
 let playingList = []
 
 // Start a TCP Server
@@ -62,11 +64,10 @@ const server = net
           if (mType === MessageTypes.accepted) {
             //mandar mes=nsagem para os dois clientes presentes na playingList
           } else {
-            socket.write(MessageStructure.messageError(MessageTypes.denied, MessageTypes.move))
+            socket.write(MessageStructure.messageError(MessageTypes.denied))
           }
           break
         case MessageTypes.start:
-          // usar find
           break
         case MessageTypes.err:
           break
