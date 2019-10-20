@@ -6,6 +6,8 @@ const MessageTypes = remote.getGlobal('shared').MessageTypes
 const currentWindow = remote.getCurrentWindow()
 const req = remote.getGlobal('shared').req
 
+req.socket.on('data', data => {})
+
 async function addNewUser(evt) {
   evt.preventDefault()
   const res = await req.request({
@@ -63,21 +65,6 @@ async function getUsersList() {
 
 async function populateUserList() {
   users = await getUsersList()
-
-  // users_list = []
-  // spl_users = users.split('}')
-
-  // for (const i in spl_users) {
-  //   if (i == spl_users.length - 1) {
-  //     break
-  //   }
-
-  //   const begin = spl_users[i].search('nickname') + 11
-  //   const end = spl_users[i].search('socket') - 3
-  //   const user = spl_users[i].slice(begin, end)
-
-  //   users_list.push(user)
-  // }
 
   for (const i in users) {
     document.getElementById('players-table-id').innerHTML +=
