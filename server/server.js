@@ -58,6 +58,12 @@ const server = net
           }
           break
         case MessageTypes.move:
+          //const mType = addPosition(aux.payload, symb)
+          if (mType === MessageTypes.accepted) {
+            //mandar mes=nsagem para os dois clientes presentes na playingList
+          }else{
+            socket.write(MessageStructure.messageError(MessageTypes.denied, MessageTypes.move))
+          }
           break
         case MessageTypes.start:
           // usar find
