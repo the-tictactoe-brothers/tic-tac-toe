@@ -61,7 +61,7 @@ const server = net
           //const mType = addPosition(aux.payload, symb)
           if (mType === MessageTypes.accepted) {
             //mandar mes=nsagem para os dois clientes presentes na playingList
-          }else{
+          } else {
             socket.write(MessageStructure.messageError(MessageTypes.denied, MessageTypes.move))
           }
           break
