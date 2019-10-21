@@ -77,6 +77,12 @@ async function populateUserList() {
       '</button>' +
       '</td></tr>'
   }
+
+  req.registerAsyncCallback(message => {
+    const oponent = message.payload
+    const url = path.resolve(__dirname, 'game.html')
+    currentWindow.loadURL(`file://${url}`)
+  })
 }
 
 async function challengePlayer(element) {
