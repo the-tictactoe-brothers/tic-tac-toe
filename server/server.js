@@ -104,10 +104,8 @@ const server = net
             waitList.splice(waitList.indexOf(challenged), 1)
             waitList.splice(waitList.indexOf(challenger), 1)
             playingList.push([challenged, challenger])
-            socket.write(MessageStructure.messageStart(MessageTypes.accepted, challenged.nickname))
-            challenged.socket.write(
-              MessageStructure.asyncStart(MessageTypes.accepted, challenger.nickname)
-            )
+            socket.write(MessageStructure.messageStart(MessageTypes.accepted, challenged))
+            challenged.socket.write(MessageStructure.asyncStart(MessageTypes.accepted, challenger))
           } else {
             //Menssagem para o usuário desafiante caso negado
             socket.write(MessageStructure.messageStart(MessageTypes.denied))
