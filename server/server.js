@@ -123,6 +123,7 @@ const server = net
           } else {
             socket.write(MessageStructure.messageStart(MessageTypes.denied))
           }
+          //listar usuários
           break
         default:
           break
