@@ -39,10 +39,20 @@ function messageMove(type, nickname, payload) {
     ...maybe('payload', payload)
   })
 }
+function messageListUsers(message, users) {
+  return JSON.stringify({
+    message,
+    users
+  })
+}
 
 module.exports = {
   messageNewUser,
   messageStartGame,
   messageError,
+<<<<<<< HEAD
   messageMove
+=======
+  messageListUsers
+>>>>>>> meta2 update
 }

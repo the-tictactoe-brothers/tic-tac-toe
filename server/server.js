@@ -100,12 +100,10 @@ const server = net
         case MessageTypes.start:
           const challenged = waitList.find(user => user.nickname === aux.payload)
           const challenger = waitList.find(user => user.socket === socket)
-          if (challeged && challenger) {
-            let removed = waitList.splice(waitList.indexOf(challegend), 1)
-            playingList.push(removed[0])
-            removed = waitList.splice(waitList.indexOf(challenger), 1)
-            playingList.push(removed[0])
-
+          if (challenged && challenger) {
+            waitList.splice(waitList.indexOf(challenged), 1)
+            waitList.splice(waitList.indexOf(challenger), 1)
+            playingList.push([challenged, challenger])
             socket.write(MessageStructure.messageStart(MessageTypes.accepted, challenger))
             challenged.socket.write(MessageStructure.asyncStart(MessageTypes.accepted, challenged))
           } else {
@@ -115,6 +113,16 @@ const server = net
           // usar find
           break
         case MessageTypes.err:
+          break
+        case MessageTypes.listUsers:
+          const client = waitList.find(user => user.socket === socket)
+          if (client) {
+            let usersList = waitList.filter(user => user.socket != socket)
+            usersList.unshift(client)
+            socket.write(MessageStructure.messageListUsers(MessageTypes.accepted, usersList))
+          } else {
+            socket.write(MessageStructure.messageStart(MessageTypes.denied))
+          }
           break
         default:
           break
