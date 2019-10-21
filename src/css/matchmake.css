@@ -38,7 +38,11 @@ td {
   color:#a42206;
 }
 
-.challenge-cell:hover {
+.self {
+  color:blue
+}
+
+.oponent:hover {
   cursor:pointer
 }
 

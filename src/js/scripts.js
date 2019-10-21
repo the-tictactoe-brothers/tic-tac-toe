@@ -58,19 +58,28 @@ async function getUsersList() {
   const res = await req.request({
     type: MessageTypes.listUsers
   })
-  return res
+  users = res.users
+  return users
 }
 
 async function populateUserList() {
   users = await getUsersList()
-
   for (const i in users) {
+    if (i == 0) {
+      const inner = 'class="challenge-cell-self">You'
+    }else {
+
+    }
+    const inner = i == 0 ? ' self">You' : ' oponent" onclick="challengePlayer(this)">Challenge'
+
     document.getElementById('players-table-id').innerHTML +=
       '<tr><td>' +
       users[i].nickname +
       '</td>' +
       '<td>' +
-      '<button class="challenge-cell" onclick="challengePlayer(this)">Challenge</button>' +
+      '<button class="challenge-cell' +
+      inner +
+      '</button>' +
       '</td></tr>'
   }
 }
