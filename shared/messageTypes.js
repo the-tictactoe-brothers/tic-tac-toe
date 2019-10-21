@@ -10,7 +10,7 @@ const MessageTypes = {
   asyncStart: 'asyncStart',
   accepted: 'accepted',
   denied: 'denied',
-  asyncStart: 'asynchronousStar'
+  asyncStart: 'asynchronousStart'
 }
 
 module.exports = MessageTypes
