@@ -42,6 +42,11 @@ function addPosition(position, symb) {
   let x = position[0]
   let y = position[1]
 
+  let resp = {
+    type: undefined,
+    array: undefined
+  }
+
   if (matriz[x][y]) {
     answer.type = 0
     answer.array = position
