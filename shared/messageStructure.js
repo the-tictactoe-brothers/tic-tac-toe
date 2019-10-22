@@ -32,8 +32,17 @@ function messageError(type, payload) {
   })
 }
 
+function messageMove(type, nickname, payload) {
+  return JSON.stringify({
+    type,
+    ...maybe('nickname', nickname),
+    ...maybe('payload', payload)
+  })
+}
+
 module.exports = {
   messageNewUser,
   messageStartGame,
-  messageError
+  messageError,
+  messageMove
 }

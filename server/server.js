@@ -2,6 +2,7 @@
 const net = require('net') // net module -: provides an asynchronous network API
 const MessageTypes = require('../shared/messageTypes')
 const MessageStructure = require('../shared/messageStructure')
+const Matriz = require('../server/matriz')
 
 function onclose(server, signal, callback) {
   return () => {
@@ -60,11 +61,40 @@ const server = net
           }
           break
         case MessageTypes.move:
-          //const mType = addPosition(aux.payload, symb)
-          if (mType === MessageTypes.accepted) {
-            //mandar mes=nsagem para os dois clientes presentes na playingList
-          } else {
-            socket.write(MessageStructure.messageError(MessageTypes.denied))
+          let challenger, challenged
+          // Looking for players on playingList
+          for (var i in playingList) {
+            if (playingList[i].find(user => user.socket === socket)) {
+              challenger = playingList[i].find(user => user.socket === socket)
+              challenged = playingList[i].find(user => user.socket !== socket)
+              break
+            }
+          }
+          // returns 1 if position is added, returns 2 if you have a winner, otherwise returns 0
+          switch (Matriz.addPosition(aux.payload, challenger.symb)) {
+            case 0:
+              challenger.socket.write(MessageStructure.messageError(MessageTypes.denied))
+              break
+            case 1:
+              challenger.socket.write(
+                MessageStructure.messageMove(MessageTypes.accepted, aux.payload)
+              )
+              challenged.socket.write(
+                MessageStructure.messageMove(MessageTypes.asyncMove, aux.payload)
+              )
+              break
+            case 2:
+              challenger.socket.write(
+                MessageStructure.messageMove(MessageTypes.endGame, challenger.nickname, aux.payload)
+              )
+              challenged.socket.write(
+                MessageStructure.messageMove(
+                  MessageTypes.asyncEndGame,
+                  challenger.nickname,
+                  aux.payload
+                )
+              )
+              break
           }
           break
         case MessageTypes.start:
