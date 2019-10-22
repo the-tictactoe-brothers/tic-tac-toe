@@ -30,6 +30,11 @@ let answer = {
 // Contador para verificar questão de empate
 let count = 0
 
+let answer = {
+  type: undefined,
+  array: undefined
+}
+
 function printMatriz() {
   for (let i = 0; i < matriz.length; i++) {
     for (let j = 0; j < matriz.length; j++) {
@@ -41,11 +46,6 @@ function printMatriz() {
 function addPosition(position, symb) {
   let x = position[0]
   let y = position[1]
-
-  let resp = {
-    type: undefined,
-    array: undefined
-  }
 
   if (matriz[x][y]) {
     answer.type = 0
