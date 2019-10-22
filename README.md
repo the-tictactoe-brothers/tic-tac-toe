@@ -1,5 +1,5 @@
 # Tic Tac Toe Distribuído
-[![Build Status](https://travis-ci.com/Lakshamana/tic-tac-toe.svg?branch=master)](https://travis-ci.com/Lakshamana/tic-tac-toe)
+[![Build Status](https://travis-ci.com/the-tictactoe-brothers/tic-tac-toe.svg?branch=master)](https://travis-ci.com/the-tictactoe-brothers/tic-tac-toe)
 
 Para contribuir, siga estes passos (For contributing, follow these steps):
 ```bash
