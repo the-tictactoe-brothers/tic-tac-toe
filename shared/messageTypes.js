@@ -7,7 +7,7 @@ const MessageTypes = {
   err: 'err',
   listUsers: 'listUsers',
   start: 'start', // mesagem enviada ao iniciar um jogo
-  asyncStart: 'asyncStart',
+  asyncStartGame: 'asyncStartGame',
   accepted: 'accepted',
   denied: 'denied'
 }
