@@ -27,6 +27,9 @@ let answer = {
   array: undefined
 }
 
+// Contador para verificar questão de empate
+let count = 0
+
 function printMatriz() {
   for (let i = 0; i < matriz.length; i++) {
     for (let j = 0; j < matriz.length; j++) {
@@ -86,7 +89,7 @@ function verify(position, symb) {
 
       // Secondary Diagonal check
       if (
-        (x == y || (x == 0 && y == 2) || (x == 2 && y == 0)) &&
+        ((x == 1 && y == 1) || (x == 0 && y == 2) || (x == 2 && y == 0)) &&
         matriz[0][2] == matriz[1][1] &&
         matriz[1][1] == matriz[2][0]
       ) {
@@ -95,6 +98,14 @@ function verify(position, symb) {
         return answer
       }
     }
+  }
+  count++
+
+  // Tie check
+  if (count == 9) {
+    answer.array = [x, y]
+    answer.type = 3
+    return answer
   }
   answer.type = 1
   return answer

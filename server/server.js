@@ -91,6 +91,16 @@ const server = net
                 MessageStructure.messageMove(MessageTypes.asyncEndGame, answerEnd)
               )
               break
+            case 3:
+              const answerTie = {
+                nickname,
+                array: answer.array
+              }
+              challenger.socket.write(MessageStructure.messageMove(MessageTypes.endGame, answerTie))
+              challenged.socket.write(
+                MessageStructure.messageMove(MessageTypes.asyncEndGame, answerTie)
+              )
+              break
           }
           break
         case MessageTypes.start:
