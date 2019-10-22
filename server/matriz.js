@@ -34,8 +34,14 @@ function addPosition(position, symb) {
   let x = position[0]
   let y = position[1]
 
+  let resp = {
+    type: undefined,
+    array: undefined
+  }
+
   if (matriz[x][y]) {
-    return 0
+    resp.type = 0
+    return resp
   } else {
     matriz[x][y] = symb
     return this.verify(position, symb)

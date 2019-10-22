@@ -11,9 +11,10 @@ function onclose(server, signal, callback) {
   }
 }
 
+// List of users waiting to play
 let waitList = []
 
-// List of users waiting to play
+// List of users playing
 let playingList = []
 
 // Start a TCP Server
@@ -67,7 +68,8 @@ const server = net
             }
           }
           // returns 1 if position is added, returns 2 if you have a winner, otherwise returns 0
-          switch (Matriz.addPosition(aux.payload, challenger.symbol)) {
+          const aux = Matriz.addPosition(aux.payload, challenger.symb)
+          switch (aux.type) {
             case 0:
               challenger.socket.write(MessageStructure.messageError(MessageTypes.denied))
               break
