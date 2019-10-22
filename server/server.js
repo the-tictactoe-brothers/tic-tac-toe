@@ -112,7 +112,7 @@ const server = net
           break
         case MessageTypes.listUsers:
           const users = waitList.filter(user => user.socket !== socket)
-          const me = waitList.filter(user => user.socket === socket)
+          const me = waitList.find(user => user.socket === socket)
           users.unshift(me)
           socket.write(MessageStructure.messageListUsers(MessageTypes.accepted, users))
           // listar usuários
