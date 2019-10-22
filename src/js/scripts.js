@@ -37,7 +37,7 @@ async function addNewUser(evt) {
 
 function initGame() {
   createGrid(3, 3)
-  req.registerAsyncCallback(message => {
+  req.registerAsyncCallback(MessageTypes.asyncMove, message => {
     // console.log(`Received oponentMove:`, message)
     const [x, y] = message.payload
     console.log(x, y)
@@ -49,6 +49,22 @@ function initGame() {
     setBoardLocked(false)
     changeTurn(true)
   })
+
+  req.registerAsyncCallback(MessageTypes.asyncEndGame, message => {
+    // console.log(`Received oponentMove:`, message)
+    const [x, y] = message.payload
+    console.log(x, y)
+    const slot = document.getElementById(`slot-${x}-${y}`)
+    const shape = remote.getGlobal('shared').username === 'jose' ? 'cross' : 'circle'
+    slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+    slot.style.backgroundColor = '#cdcdcd'
+    slot.onclick = undefined
+    onEndGame()
+  })
+}
+
+function onEndGame() {
+  setBoardLocked(false)
 }
 
 function createGrid(n, m) {
@@ -96,7 +112,7 @@ async function onClick(e) {
   slot.onclick = undefined
   setBoardLocked(true)
   changeTurn(false)
-  console.log(`Server's response for ${username}: ${res.message}`)
+  console.log(`Server's response for ${username}: ${res.type}`)
 }
 
 async function getUsersList() {
