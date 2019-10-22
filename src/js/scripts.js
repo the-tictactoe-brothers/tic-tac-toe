@@ -80,7 +80,7 @@ async function populateUserList() {
       '</td></tr>'
   }
 
-  req.registerAsyncCallback(message => {
+  req.registerAsyncCallback(MessageTypes.asyncStartGame, message => {
     opponent = message.payload
     const url = path.resolve(__dirname, 'game.html')
     currentWindow.loadURL(`file://${url}`)
