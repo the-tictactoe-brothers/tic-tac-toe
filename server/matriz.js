@@ -1,5 +1,3 @@
-const MessageTypes = require('../shared/messageTypes')
-
 /** (Matrix structure used)
  *
  * let matriz = [
@@ -22,10 +20,7 @@ const MessageTypes = require('../shared/messageTypes')
  *
  */
 
-let matriz = Array.from(
-  { length: 3 },
-  coluna => (coluna = Array.from({ length: 3 }, linha => (linha = undefined)))
-)
+let matriz = Array.from({ length: 3 }, coluna => Array.from({ length: 3 }, linha => undefined))
 
 function printMatriz() {
   for (let i = 0; i < matriz.length; i++) {
@@ -40,7 +35,6 @@ function addPosition(position, symb) {
   let y = position[1]
 
   if (matriz[x][y]) {
-    // if value != undefined
     return 0
   } else {
     matriz[x][y] = symb
@@ -71,10 +65,12 @@ function verify(position, symb) {
         return 2
       }
 
+      // Main Diagonal check
       if (x == y && matriz[0][0] == matriz[1][1] && matriz[1][1] == matriz[2][2]) {
         return 2
       }
 
+      // Secondary Diagonal check
       if (
         (x == y || (x == 0 && y == 2) || (x == 2 && y == 0)) &&
         matriz[0][2] == matriz[1][1] &&
