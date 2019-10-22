@@ -6,6 +6,8 @@ const MessageTypes = remote.getGlobal('shared').MessageTypes
 const currentWindow = remote.getCurrentWindow()
 const req = remote.getGlobal('shared').req
 
+let opponent = null
+
 async function addNewUser(evt) {
   evt.preventDefault()
   const res = await req.request({
@@ -79,7 +81,7 @@ async function populateUserList() {
   }
 
   req.registerAsyncCallback(message => {
-    const oponent = message.payload
+    opponent = message.payload
     const url = path.resolve(__dirname, 'game.html')
     currentWindow.loadURL(`file://${url}`)
   })
@@ -87,16 +89,17 @@ async function populateUserList() {
 
 async function challengePlayer(element) {
   const index = element.closest('tr').rowIndex
-  opponent = document.getElementById('players-table-id').rows[index].cells[0].innerHTML
+  opponentNick = document.getElementById('players-table-id').rows[index].cells[0].innerHTML
 
   const req = await req.Request({
     type: MessageTypes.start,
-    payload: opponent
+    payload: opponentNick
   })
 
   console.log(res)
 
   if (res.message === MessageTypes.accepted) {
+    opponent = res.payload
     const url = path.resolve(__dirname, 'game.html')
     currentWindow.loadURL(`file://${url}`)
   } else {
