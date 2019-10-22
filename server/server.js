@@ -58,12 +58,15 @@ const server = net
           }
           break
         case MessageTypes.move:
+          let challenger, challenged
+          const positionArray = 0
           // Looking for players on playingList
           for (var i in playingList) {
             const found = playingList[i].find(user => user.socket === socket)
             if (found) {
               challenger = found
               challenged = playingList[i].find(user => user.socket !== socket)
+              positionArray = i
               break
             }
           }
@@ -82,20 +85,26 @@ const server = net
               )
               break
             case 2:
+              swappingLists(challenger, challenged, positionArray)
+
               const answerEnd = {
                 nickname: challenger.nickname,
                 array: answer.array
               }
+
               challenger.socket.write(MessageStructure.messageMove(MessageTypes.endGame, answerEnd))
               challenged.socket.write(
                 MessageStructure.messageMove(MessageTypes.asyncEndGame, answerEnd)
               )
               break
             case 3:
+              swappingLists(challenger, challenged, positionArray)
+
               const answerTie = {
                 nickname,
                 array: answer.array
               }
+
               challenger.socket.write(MessageStructure.messageMove(MessageTypes.endGame, answerTie))
               challenged.socket.write(
                 MessageStructure.messageMove(MessageTypes.asyncEndGame, answerTie)
@@ -163,3 +172,11 @@ process.once(
     process.kill(process.pid, signal)
   })
 )
+
+function swappingLists(myChallenger, myChallenged, myPositionArray) {
+  playingList.splice(myPositionArray, 1)
+  delete myChallenger.symb
+  waitList.push(myChallenger)
+  delete myChallenged.symb
+  waitList.push(myChallenged)
+}
