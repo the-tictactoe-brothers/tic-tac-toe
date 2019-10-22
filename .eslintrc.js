@@ -2,16 +2,17 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    node: true
+    node: true,
+    es6: true
   },
   parserOptions: {
-    "ecmaVersion": 2018
-  },
-  env: {
-    "es6": true
+    ecmaVersion: 2018,
+    parser: 'babel-eslint'
   },
   extends: [
-    'prettier',
+    'plugin:vue/recommended',
+    'eslint:recommended',
+    'prettier/vue',
     'plugin:prettier/recommended'
   ],
   plugins: [
@@ -19,8 +20,10 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
-    'arrow-parens': "off",
+    'arrow-parens': 'off',
     'no-console': 'off',
-    'max-len': ['error', { code: 100 }]
+    'max-len': ['error', { code: 100 }],
+    'no-case-declarations': 'off',
+    'spaced-comment': 'error'
   }
 }
