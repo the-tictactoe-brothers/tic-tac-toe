@@ -68,29 +68,27 @@ const server = net
             }
           }
           // returns 1 if position is added, returns 2 if you have a winner, otherwise returns 0
-          const aux = Matriz.addPosition(aux.payload, challenger.symb)
-          switch (aux.type) {
+          const answer = Matriz.addPosition(aux.payload, challenger.symb)
+          switch (answer.type) {
             case 0:
               challenger.socket.write(MessageStructure.messageError(MessageTypes.denied))
               break
             case 1:
               challenger.socket.write(
-                MessageStructure.messageMove(MessageTypes.accepted, aux.payload)
+                MessageStructure.messageMove(MessageTypes.accepted, answer.array)
               )
               challenged.socket.write(
-                MessageStructure.messageMove(MessageTypes.asyncMove, aux.payload)
+                MessageStructure.messageMove(MessageTypes.asyncMove, answer.array)
               )
               break
             case 2:
-              challenger.socket.write(
-                MessageStructure.messageMove(MessageTypes.endGame, challenger.nickname, aux.payload)
-              )
+              const answerEnd = {
+                nickname: challenger.nickname,
+                array: answer.array
+              }
+              challenger.socket.write(MessageStructure.messageMove(MessageTypes.endGame, answerEnd))
               challenged.socket.write(
-                MessageStructure.messageMove(
-                  MessageTypes.asyncEndGame,
-                  challenger.nickname,
-                  aux.payload
-                )
+                MessageStructure.messageMove(MessageTypes.asyncEndGame, answerEnd)
               )
               break
           }
