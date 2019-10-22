@@ -95,7 +95,7 @@ const server = net
         case MessageTypes.start:
           challenged = waitList.find(user => user.nickname === aux.payload)
           challenger = waitList.find(user => user.socket === socket)
-          if (challenged && challenger) {
+          if (challenged && challenger && challenger.nickname !== challenged.nickname) {
             waitList.splice(waitList.indexOf(challenged), 1)
             waitList.splice(waitList.indexOf(challenger), 1)
             playingList.push(challenged, challenger)
