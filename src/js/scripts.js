@@ -17,7 +17,7 @@ async function addNewUser(evt) {
 
   console.log(res)
   const nickForm = document.getElementById('nick-form')
-  if (res.message === MessageTypes.accepted) {
+  if (res.type === MessageTypes.accepted) {
     const url = path.resolve(__dirname, 'html/matchmake.html')
     currentWindow.loadURL(`file://${url}`)
   } else {
@@ -98,7 +98,7 @@ async function challengePlayer(element) {
 
   console.log(res)
 
-  if (res.message === MessageTypes.accepted) {
+  if (res.type === MessageTypes.accepted) {
     opponent = res.payload
     const url = path.resolve(__dirname, 'game.html')
     currentWindow.loadURL(`file://${url}`)
