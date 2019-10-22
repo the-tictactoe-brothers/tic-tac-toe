@@ -101,7 +101,7 @@ const server = net
             playingList.push(challenged, challenger)
             socket.write(MessageStructure.messageStartGame(MessageTypes.accepted, challenged))
             challenged.socket.write(
-              MessageStructure.asyncStart(MessageTypes.asyncStartGame, challenger)
+              MessageStructure.messageStartGame(MessageTypes.asyncStartGame, challenger)
             )
           } else {
             // Mensagem para o usuário desafiante caso negado
