@@ -98,8 +98,8 @@ const server = net
           }
           break
         case MessageTypes.start:
-          const challenged = waitList.find(user => user.nickname === aux.payload)
-          const challenger = waitList.find(user => user.socket === socket)
+          challenged = waitList.find(user => user.nickname === aux.payload)
+          challenger = waitList.find(user => user.socket === socket)
           if (challenged && challenger) {
             waitList.splice(waitList.indexOf(challenged), 1)
             waitList.splice(waitList.indexOf(challenger), 1)

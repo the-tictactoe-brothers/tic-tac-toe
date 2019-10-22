@@ -50,9 +50,6 @@ module.exports = {
   messageNewUser,
   messageStartGame,
   messageError,
-<<<<<<< HEAD
-  messageMove
-=======
+  messageMove,
   messageListUsers
->>>>>>> meta2 update
 }
