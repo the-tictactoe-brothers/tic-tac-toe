@@ -44,6 +44,10 @@ function initGame() {
     const slot = document.getElementById(`slot-${x}-${y}`)
     const shape = remote.getGlobal('shared').username === 'jose' ? 'cross' : 'circle'
     slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+    slot.style.backgroundColor = '#cdcdcd'
+    slot.onclick = undefined
+    setBoardLocked(false)
+    changeTurn(true)
   })
 }
 
@@ -54,10 +58,20 @@ function createGrid(n, m) {
       const slot = document.createElement('div')
       slot.setAttribute('id', `slot-${i}-${j}`)
       slot.classList.add('board-slot')
-      slot.addEventListener('click', evt => onClick(evt))
+      slot.onclick = evt => onClick(evt)
       board.appendChild(slot)
     }
   }
+}
+
+function setBoardLocked(locked) {
+  const d = document.getElementById('game-board')
+  d.style.pointerEvents = locked ? 'none' : ''
+}
+
+function changeTurn(myTurn) {
+  const turnDiv = document.getElementById('turn-result-div')
+  turnDiv.innerHTML = myTurn ? "It's your turn" : "Opponent's turn"
 }
 
 async function onClick(e) {
@@ -78,6 +92,10 @@ async function onClick(e) {
   const slot = document.getElementById(id)
   const shape = username === 'joao' ? 'cross' : 'circle'
   slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+  slot.style.backgroundColor = '#cdcdcd'
+  slot.onclick = undefined
+  setBoardLocked(true)
+  changeTurn(false)
   console.log(`Server's response for ${username}: ${res.message}`)
 }
 

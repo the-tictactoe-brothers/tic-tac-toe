@@ -159,6 +159,7 @@ const server = net
 
     // Remove the client from the list when it leaves
     socket.on('end', function() {
+      console.log('end\n')
       waitList.splice(waitList.indexOf(socket), 1)
     })
   })
