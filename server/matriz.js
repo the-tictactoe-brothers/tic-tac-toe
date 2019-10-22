@@ -35,6 +35,9 @@ let answer = {
   array: undefined
 }
 
+// Contador para verificar questão de empate
+let count = 0
+
 function printMatriz() {
   for (let i = 0; i < matriz.length; i++) {
     for (let j = 0; j < matriz.length; j++) {
