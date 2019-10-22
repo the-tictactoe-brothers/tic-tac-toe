@@ -11,12 +11,7 @@ function onclose(server, signal, callback) {
   }
 }
 
-let waitList = [
-  {
-    nickname: 'rui',
-    socket: null
-  }
-]
+let waitList = []
 
 // List of users waiting to play
 let playingList = []
@@ -35,6 +30,7 @@ const server = net
       let aux = JSON.parse(data) // convert string(JSON) to obj
       const nicknames = waitList.map(user => user.nickname)
 
+      let challenger, challenged
       switch (aux.type) {
         case MessageTypes.newUser:
           // check if list is empty
@@ -61,7 +57,6 @@ const server = net
           }
           break
         case MessageTypes.move:
-          let challenger, challenged
           // Looking for players on playingList
           for (var i in playingList) {
             if (playingList[i].find(user => user.socket === socket)) {
@@ -103,27 +98,22 @@ const server = net
           if (challenged && challenger) {
             waitList.splice(waitList.indexOf(challenged), 1)
             waitList.splice(waitList.indexOf(challenger), 1)
-            playingList.push([challenged, challenger])
-            socket.write(MessageStructure.messageStart(MessageTypes.accepted, challenged))
-            challenged.socket.write(MessageStructure.asyncStart(MessageTypes.accepted, challenger))
+            playingList.push(challenged, challenger)
+            socket.write(MessageStructure.messageStartGame(MessageTypes.accepted, challenged))
+            challenged.socket.write(
+              MessageStructure.asyncStart(MessageTypes.asyncStart, challenger)
+            )
           } else {
-            //Menssagem para o usuário desafiante caso negado
-            socket.write(MessageStructure.messageStart(MessageTypes.denied))
+            // Mensagem para o usuário desafiante caso negado
+            socket.write(MessageStructure.messageError(MessageTypes.denied))
           }
-          // usar find
           break
         case MessageTypes.err:
           break
         case MessageTypes.listUsers:
-          const client = waitList.find(user => user.socket === socket)
-          if (client) {
-            let usersList = waitList.filter(user => user.socket != socket)
-            usersList.unshift(client)
-            socket.write(MessageStructure.messageListUsers(MessageTypes.accepted, usersList))
-          } else {
-            socket.write(MessageStructure.messageStart(MessageTypes.denied))
-          }
-          //listar usuários
+          const users = waitList.filter(user => user.socket !== socket)
+          socket.write(MessageStructure.messageListUsers(MessageTypes.accepted, users))
+          // listar usuários
           break
         default:
           break

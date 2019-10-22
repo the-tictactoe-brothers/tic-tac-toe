@@ -25,6 +25,13 @@ function messageStartGame(type, nickname) {
   })
 }
 
+function asyncStart(type, user) {
+  return JSON.stringify({
+    type,
+    user
+  })
+}
+
 function messageError(type, payload) {
   return JSON.stringify({
     type,
@@ -39,6 +46,7 @@ function messageMove(type, nickname, payload) {
     ...maybe('payload', payload)
   })
 }
+
 function messageListUsers(message, users) {
   return JSON.stringify({
     message,
@@ -51,5 +59,6 @@ module.exports = {
   messageStartGame,
   messageError,
   messageMove,
-  messageListUsers
+  messageListUsers,
+  asyncStart
 }

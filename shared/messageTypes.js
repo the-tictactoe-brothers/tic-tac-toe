@@ -9,8 +9,7 @@ const MessageTypes = {
   start: 'start', // mesagem enviada ao iniciar um jogo
   asyncStart: 'asyncStart',
   accepted: 'accepted',
-  denied: 'denied',
-  asyncStart: 'asynchronousStart'
+  denied: 'denied'
 }
 
 module.exports = MessageTypes
