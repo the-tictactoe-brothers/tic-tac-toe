@@ -1,3 +1,4 @@
+/* eslint-disable */
 const remote = require('electron').remote
 const path = require('path')
 

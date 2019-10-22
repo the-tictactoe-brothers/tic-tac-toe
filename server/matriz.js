@@ -20,7 +20,7 @@
  *
  */
 
-let matriz = Array.from({ length: 3 }, coluna => Array.from({ length: 3 }, linha => undefined))
+let matriz = Array.from({ length: 3 }, () => Array.from({ length: 3 }))
 
 function printMatriz() {
   for (let i = 0; i < matriz.length; i++) {
@@ -52,9 +52,10 @@ function rmvPosition(position) {
 function verify(position, symb) {
   let x = position[0]
   let y = position[1]
+  console.log(symb)
 
-  loop1: for (let i = 0; i < matriz.length; i++) {
-    loop2: for (let j = 0; j < matriz.length; j++) {
+  for (let i = 0; i < matriz.length; i++) {
+    for (let j = 0; j < matriz.length; j++) {
       // horizontal check
       if (x == i && matriz[x][0] == matriz[x][1] && matriz[x][1] == matriz[x][2]) {
         return 2
@@ -84,5 +85,8 @@ function verify(position, symb) {
 }
 
 module.exports = {
-  addPosition
+  addPosition,
+  printMatriz,
+  rmvPosition,
+  verify
 }

@@ -11,12 +11,7 @@ function onclose(server, signal, callback) {
   }
 }
 
-let waitList = [
-  {
-    nickname: 'rui',
-    socket: null
-  }
-]
+let waitList = []
 
 // List of users waiting to play
 let playingList = []
@@ -35,6 +30,7 @@ const server = net
       let aux = JSON.parse(data) // convert string(JSON) to obj
       const nicknames = waitList.map(user => user.nickname)
 
+      let challenger, challenged
       switch (aux.type) {
         case MessageTypes.newUser:
           // check if list is empty
@@ -61,7 +57,6 @@ const server = net
           }
           break
         case MessageTypes.move:
-          let challenger, challenged
           // Looking for players on playingList
           for (var i in playingList) {
             if (playingList[i].find(user => user.socket === socket)) {
@@ -98,8 +93,29 @@ const server = net
           }
           break
         case MessageTypes.start:
+          challenged = waitList.find(user => user.nickname === aux.payload)
+          challenger = waitList.find(user => user.socket === socket)
+          if (challenged && challenger && challenger.nickname !== challenged.nickname) {
+            waitList.splice(waitList.indexOf(challenged), 1)
+            waitList.splice(waitList.indexOf(challenger), 1)
+            playingList.push(challenged, challenger)
+            socket.write(MessageStructure.messageStartGame(MessageTypes.accepted, challenged))
+            challenged.socket.write(
+              MessageStructure.messageStartGame(MessageTypes.asyncStartGame, challenger)
+            )
+          } else {
+            // Mensagem para o usuário desafiante caso negado
+            socket.write(MessageStructure.messageError(MessageTypes.denied))
+          }
           break
         case MessageTypes.err:
+          break
+        case MessageTypes.listUsers:
+          const users = waitList.filter(user => user.socket !== socket)
+          const me = waitList.filter(user => user.socket === socket)
+          users.unshift(me)
+          socket.write(MessageStructure.messageListUsers(MessageTypes.accepted, users))
+          // listar usuários
           break
         default:
           break

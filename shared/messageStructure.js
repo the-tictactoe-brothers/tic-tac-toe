@@ -40,9 +40,17 @@ function messageMove(type, nickname, payload) {
   })
 }
 
+function messageListUsers(message, users) {
+  return JSON.stringify({
+    message,
+    users
+  })
+}
+
 module.exports = {
   messageNewUser,
   messageStartGame,
   messageError,
-  messageMove
+  messageMove,
+  messageListUsers
 }

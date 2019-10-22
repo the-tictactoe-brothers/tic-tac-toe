@@ -1,7 +1,6 @@
 const { app, BrowserWindow } = require('electron')
 const Requestor = require('./utils/requestor')
 const MessageTypes = require('../shared/messageTypes')
-const path = require('path')
 
 require('electron-reload')(__dirname)
 

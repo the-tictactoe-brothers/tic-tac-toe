@@ -1,4 +1,4 @@
-const MessageTypes = require('../../shared/messageTypes')
+const { EventEmitter } = require('events')
 
 /**
  * Performs a request to server
@@ -17,7 +17,6 @@ class Requestor {
     this.events = []
 
     this.socket.on('data', data => {
-      console.log(data.toLocaleString())
       const messageData = JSON.parse(data.toLocaleString())
       if (this.events.includes(messageData.type)) {
         this.asyncReceiver.emit(messageData.type, messageData)
