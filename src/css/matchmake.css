@@ -30,4 +30,20 @@ td {
   width: 200px;
 }
 
+.challenge-cell {
+  border: none;
+  background:none;
+  outline:none;
+  font-size:14px;
+  color:#a42206;
+}
+
+.self {
+  color:blue
+}
+
+.oponent:hover {
+  cursor:pointer
+}
+
 

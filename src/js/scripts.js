@@ -6,6 +6,8 @@ const MessageTypes = remote.getGlobal('shared').MessageTypes
 const currentWindow = remote.getCurrentWindow()
 const req = remote.getGlobal('shared').req
 
+let opponent = null
+
 async function addNewUser(evt) {
   evt.preventDefault()
   const res = await req.request({
@@ -15,7 +17,7 @@ async function addNewUser(evt) {
 
   console.log(res)
   const nickForm = document.getElementById('nick-form')
-  if (res.message === MessageTypes.accepted) {
+  if (res.type === MessageTypes.accepted) {
     const url = path.resolve(__dirname, 'html/matchmake.html')
     currentWindow.loadURL(`file://${url}`)
   } else {
@@ -55,15 +57,52 @@ function onClick(e) {
 }
 
 async function getUsersList() {
-  let req = new Requestor()
   const res = await req.request({
     type: MessageTypes.listUsers
   })
-  return res
+  users = res.users
+  return users
 }
 
 async function populateUserList() {
   users = await getUsersList()
-  document.getElementById('players-table-id').innerHTML +=
-    '<tr><td>' + users + "</td><td><a href='game.html'>Challenge</a></td></tr>"
+  for (const i in users) {
+    const inner = i == 0 ? ' self">You' : ' oponent" onclick="challengePlayer(this)">Challenge'
+
+    document.getElementById('players-table-id').innerHTML +=
+      '<tr><td>' +
+      users[i].nickname +
+      '</td>' +
+      '<td>' +
+      '<button class="challenge-cell' +
+      inner +
+      '</button>' +
+      '</td></tr>'
+  }
+
+  req.registerAsyncCallback(MessageTypes.asyncStartGame, message => {
+    opponent = message.payload
+    const url = path.resolve(__dirname, 'game.html')
+    currentWindow.loadURL(`file://${url}`)
+  })
+}
+
+async function challengePlayer(element) {
+  const index = element.closest('tr').rowIndex
+  opponentNick = document.getElementById('players-table-id').rows[index].cells[0].innerHTML
+
+  const res = await req.request({
+    type: MessageTypes.start,
+    payload: opponentNick
+  })
+
+  console.log(res)
+
+  if (res.type === MessageTypes.accepted) {
+    opponent = res.nickname
+    const url = path.resolve(__dirname, 'game.html')
+    currentWindow.loadURL(`file://${url}`)
+  } else {
+    alert('Failed to start game')
+  }
 }
