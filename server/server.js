@@ -31,6 +31,7 @@ const server = net
       let aux = JSON.parse(data) // convert string(JSON) to obj
       const nicknames = waitList.map(user => user.nickname)
 
+      let challenger, challenged
       switch (aux.type) {
         case MessageTypes.newUser:
           // check if list is empty
@@ -57,7 +58,6 @@ const server = net
           }
           break
         case MessageTypes.move:
-          let challenger, challenged
           let positionArray = 0
           // Looking for players on playingList
           for (var i in playingList) {
@@ -70,7 +70,7 @@ const server = net
             }
           }
           // returns 1 if position is added, returns 2 if you have a winner, otherwise returns 0
-          const answer = Matriz.addPosition(aux.payload, challenger.symb)
+          const answer = Matriz.addPosition(aux.payload, challenger.symbol)
           switch (answer.type) {
             case 0:
               challenger.socket.write(MessageStructure.messageError(MessageTypes.denied))
