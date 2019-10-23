@@ -19,7 +19,7 @@ body {
   display: inline-block
 }
 
-.game-name-rematch {
+#game-name-rematch {
   margin: 10px 0px;
   width: 200px;
   height: 80px;
@@ -29,7 +29,8 @@ body {
   line-height: 80px;
   border: 1px solid black
 }
-.oponent-div {
+
+#opponent-div {
   margin-top: 10px;
   margin-left: 10px;
   width: 250px;
@@ -41,7 +42,7 @@ body {
   border: 1px solid black
 }
 
-.turn-result-div {
+#turn-result-div {
   margin-bottom: 10px;
   margin-left: 10px;
   width: 250px;
@@ -53,7 +54,7 @@ body {
   border: 1px solid black
 }
 
-.game-board {
+#game-board {
   margin-right: 10px;
   margin-left: 10px;
   margin-bottom: 10px;

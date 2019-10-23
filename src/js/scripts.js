@@ -6,8 +6,7 @@ const MessageTypes = remote.getGlobal('shared').MessageTypes
 const currentWindow = remote.getCurrentWindow()
 const req = remote.getGlobal('shared').req
 
-let opponent = null
-
+let itsPlayerTurn = true
 async function addNewUser(evt) {
   evt.preventDefault()
   const res = await req.request({
@@ -15,11 +14,12 @@ async function addNewUser(evt) {
     payload: document.getElementById('nick-field').value
   })
 
-  console.log(res)
   const nickForm = document.getElementById('nick-form')
   if (res.type === MessageTypes.accepted) {
     const url = path.resolve(__dirname, 'html/matchmake.html')
+    remote.getGlobal('shared').player = res.nickname
     currentWindow.loadURL(`file://${url}`)
+    console.log(res.nickname)
   } else {
     const errorMessage = document.createElement('p')
     errorMessage.style.color = 'red'
@@ -34,6 +34,41 @@ async function addNewUser(evt) {
   }
 }
 
+function initGame() {
+  createGrid(3, 3)
+  req.registerAsyncCallback(MessageTypes.asyncMove, message => {
+    // console.log(`Received oponentMove:`, message)
+    const [x, y] = message.payload
+    console.log(x, y)
+    const slot = document.getElementById(`slot-${x}-${y}`)
+    const symb = remote.getGlobal('shared').opponent.symbol
+    const shape = symb === 'x' ? 'cross' : 'circle'
+    slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+    slot.style.backgroundColor = '#cdcdcd'
+    slot.onclick = undefined
+    setBoardLocked(false)
+    switchTurn(true)
+    switchTurn(`slot-${x}-${y}`)
+  })
+
+  req.registerAsyncCallback(MessageTypes.asyncEndGame, message => {
+    // console.log(`Received oponentMove:`, message)
+    // const [x, y] = message.payload
+    // console.log(x, y)
+    // const slot = document.getElementById(`slot-${x}-${y}`)
+    // const symb = remote.getGlobal('shared').player.symbol
+    // const shape = symb === 'x' ? 'cross' : 'circle'
+    // slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+    // slot.style.backgroundColor = '#cdcdcd'
+    // slot.onclick = undefined
+    onEndGame()
+  })
+}
+
+function onEndGame() {
+  setBoardLocked(false)
+}
+
 function createGrid(n, m) {
   const board = document.getElementById('game-board')
   for (let i = 0; i < n; i++) {
@@ -41,19 +76,52 @@ function createGrid(n, m) {
       const slot = document.createElement('div')
       slot.setAttribute('id', `slot-${i}-${j}`)
       slot.classList.add('board-slot')
-      slot.addEventListener('click', evt => onClick(evt))
+      slot.onclick = evt => onClick(evt)
       board.appendChild(slot)
     }
   }
 }
 
-function onClick(e) {
+function setBoardLocked(locked) {
+  const d = document.getElementById('game-board')
+  d.style.pointerEvents = locked ? 'none' : ''
+}
+
+function switchTurn(slotId) {
+  const turnDiv = document.getElementById('turn-result-div')
+  itsPlayerTurn = !itsPlayerTurn
+  turnDiv.innerHTML = itsPlayerTurn ? "It's your turn" : "Opponent's turn"
+
+  const slot = document.getElementById(slotId)
+  const shape = remote.getGlobal('shared').player.symbol === 'x' ? 'cross' : 'circle'
+  slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+  slot.style.backgroundColor = '#cdcdcd'
+  slot.onclick = undefined
+  // setBoardLocked(!itsPlayerTurn)
+}
+
+async function onClick(e) {
   const id = e.target.id
   const regex = /slot-([0-9])-([0-9])/g
   const groups = regex.exec(id)
   groups.shift()
   const [x, y] = groups
+  const res = await req.request({
+    type: MessageTypes.move,
+    payload: [x, y]
+  })
   console.log(x, y)
+
+  // add image
+  const slot = document.getElementById(id)
+  const symb = remote.getGlobal('shared').player.symbol
+  const shape = symb === 'x' ? 'cross' : 'circle'
+  slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+  slot.style.backgroundColor = '#cdcdcd'
+  slot.onclick = undefined
+  setBoardLocked(true)
+  switchTurn(false)
+  switchTurn(id)
 }
 
 async function getUsersList() {
@@ -65,7 +133,7 @@ async function getUsersList() {
 }
 
 async function populateUserList() {
-  users = await getUsersList()
+  const users = await getUsersList()
   for (const i in users) {
     const inner = i == 0 ? ' self">You' : ' oponent" onclick="challengePlayer(this)">Challenge'
 
@@ -82,8 +150,11 @@ async function populateUserList() {
 
   req.registerAsyncCallback(MessageTypes.asyncStartGame, message => {
     opponent = message.payload
+    console.log(message)
     const url = path.resolve(__dirname, 'game.html')
     currentWindow.loadURL(`file://${url}`)
+    console.log('asyncStartGame:', message)
+    onStartGame(message)
   })
 }
 
@@ -102,7 +173,22 @@ async function challengePlayer(element) {
     opponent = res.nickname
     const url = path.resolve(__dirname, 'game.html')
     currentWindow.loadURL(`file://${url}`)
+    console.log('sync start:', res)
+    onStartGame(res)
   } else {
     alert('Failed to start game')
   }
+}
+
+function onStartGame(message) {
+  const op = message.payload
+  remote.getGlobal('shared').opponent = op
+  const nickname = remote.getGlobal('shared').player
+  const symbol = op.symbol === 'x' ? 'o': 'x'
+  remote.getGlobal('shared').player = {
+    nickname,
+    symbol
+  }
+  const url = path.resolve(__dirname, 'game.html')
+  currentWindow.loadURL(`file://${url}`)
 }
