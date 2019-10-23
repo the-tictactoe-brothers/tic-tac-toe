@@ -31,7 +31,6 @@ const server = net
       let aux = JSON.parse(data) // convert string(JSON) to obj
       const nicknames = waitList.map(user => user.nickname)
 
-      let challenger, challenged
       switch (aux.type) {
         case MessageTypes.newUser:
           // check if list is empty
@@ -59,7 +58,7 @@ const server = net
           break
         case MessageTypes.move:
           let challenger, challenged
-          const positionArray = 0
+          let positionArray = 0
           // Looking for players on playingList
           for (var i in playingList) {
             const found = playingList[i].find(user => user.socket === socket)
@@ -101,7 +100,7 @@ const server = net
               swappingLists(challenger, challenged, positionArray)
 
               const answerTie = {
-                nickname,
+                nickname: undefined,
                 array: answer.array
               }
 
