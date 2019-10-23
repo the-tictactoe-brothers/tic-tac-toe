@@ -18,10 +18,10 @@ function messageNewUser(type, nickname) {
   })
 }
 
-function messageStartGame(type, nickname) {
+function messageStartGame(type, payload) {
   return JSON.stringify({
     type,
-    nickname
+    payload
   })
 }
 

@@ -19,6 +19,7 @@ class Requestor {
     this.socket.on('data', data => {
       const messageData = JSON.parse(data.toLocaleString())
       if (this.events.includes(messageData.type)) {
+        console.log('async:', messageData)
         this.asyncReceiver.emit(messageData.type, messageData)
       }
     })

@@ -21,7 +21,7 @@ const reqs = Array.from({ length: 5 }, () => new Requestor())
   })
 
   const challengedUser = users.find(user => user.nickname === `User${challengedId}`)
-  reqs[challengedId].registerAsyncCallback(MessageTypes.asyncStart, message => {
+  reqs[challengedId].registerAsyncCallback(MessageTypes.asyncStartGame, message => {
     console.log('async >>>', message)
   })
 

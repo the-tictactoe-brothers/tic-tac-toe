@@ -59,14 +59,15 @@ const server = net
         case MessageTypes.move:
           // Looking for players on playingList
           for (var i in playingList) {
-            if (playingList[i].find(user => user.socket === socket)) {
-              challenger = playingList[i].find(user => user.socket === socket)
+            const found = playingList[i].find(user => user.socket === socket)
+            if (found) {
+              challenger = found
               challenged = playingList[i].find(user => user.socket !== socket)
               break
             }
           }
           // returns 1 if position is added, returns 2 if you have a winner, otherwise returns 0
-          switch (Matriz.addPosition(aux.payload, challenger.symb)) {
+          switch (Matriz.addPosition(aux.payload, challenger.symbol)) {
             case 0:
               challenger.socket.write(MessageStructure.messageError(MessageTypes.denied))
               break
@@ -98,10 +99,26 @@ const server = net
           if (challenged && challenger && challenger.nickname !== challenged.nickname) {
             waitList.splice(waitList.indexOf(challenged), 1)
             waitList.splice(waitList.indexOf(challenger), 1)
-            playingList.push(challenged, challenger)
-            socket.write(MessageStructure.messageStartGame(MessageTypes.accepted, challenged))
+
+            const lucky = Math.random() > 0.5 ? 'x' : 'o'
+            challenger.symbol = lucky
+            challenged.symbol = lucky === 'x' ? 'o' : 'x'
+            playingList.push([challenged, challenger])
+
+            const challengerPayload = {
+              nickname: challenger.nickname,
+              symbol: lucky
+            }
+            const challengedPayload = {
+              nickname: challenged.nickname,
+              symbol: challenged.symbol
+            }
+
+            socket.write(
+              MessageStructure.messageStartGame(MessageTypes.accepted, challengedPayload)
+            )
             challenged.socket.write(
-              MessageStructure.messageStartGame(MessageTypes.asyncStartGame, challenger)
+              MessageStructure.messageStartGame(MessageTypes.asyncStartGame, challengerPayload)
             )
           } else {
             // Mensagem para o usuário desafiante caso negado
