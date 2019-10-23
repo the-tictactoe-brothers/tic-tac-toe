@@ -47,7 +47,7 @@ function initGame() {
     slot.style.backgroundColor = '#cdcdcd'
     slot.onclick = undefined
     setBoardLocked(false)
-    changeTurn(true)
+    switchTurn(true)
     switchTurn(`slot-${x}-${y}`)
   })
 
@@ -120,11 +120,8 @@ async function onClick(e) {
   slot.style.backgroundColor = '#cdcdcd'
   slot.onclick = undefined
   setBoardLocked(true)
-  changeTurn(false)
-  // console.log(`Server's response for ${username}: ${res.type}`)
+  switchTurn(false)
   switchTurn(id)
-  // setBoardLocked(false)
-  // console.log(`Server's response for ${player}: ${res.type}`)
 }
 
 async function getUsersList() {
