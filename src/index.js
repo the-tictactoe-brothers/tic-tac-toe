@@ -7,8 +7,7 @@ require('electron-reload')(__dirname)
 // set global variables
 global.shared = {
   req: new Requestor(),
-  MessageTypes,
-  username: undefined
+  MessageTypes
 }
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.

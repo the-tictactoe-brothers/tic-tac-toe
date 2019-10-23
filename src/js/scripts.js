@@ -6,7 +6,8 @@ const MessageTypes = remote.getGlobal('shared').MessageTypes
 const currentWindow = remote.getCurrentWindow()
 const req = remote.getGlobal('shared').req
 
-let opponent = null
+let opponent
+let player
 
 async function addNewUser(evt) {
   evt.preventDefault()
@@ -141,6 +142,7 @@ async function populateUserList() {
 
   req.registerAsyncCallback(MessageTypes.asyncStartGame, message => {
     opponent = message.payload
+    console.log(message)
     const url = path.resolve(__dirname, 'game.html')
     currentWindow.loadURL(`file://${url}`)
   })
