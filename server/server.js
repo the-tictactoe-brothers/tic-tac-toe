@@ -58,11 +58,7 @@ const server = net
           break
         case MessageTypes.move:
           let challenger, challenged
-<<<<<<< HEAD
           let positionArray = 0
-=======
-          const positionArray = 0
->>>>>>> Meta 3 - add swappingLists()
           // Looking for players on playingList
           for (var i in playingList) {
             const found = playingList[i].find(user => user.socket === socket)

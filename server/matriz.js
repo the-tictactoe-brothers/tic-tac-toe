@@ -115,6 +115,8 @@ function verify(position, symb) {
     answer.type = 3
     return answer
   }
+
+  answer.array = [x, y]
   answer.type = 1
   return answer
 }
