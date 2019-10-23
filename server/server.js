@@ -11,9 +11,10 @@ function onclose(server, signal, callback) {
   }
 }
 
+// List of users waiting to play
 let waitList = []
 
-// List of users waiting to play
+// List of users playing
 let playingList = []
 
 // Start a TCP Server
@@ -30,7 +31,6 @@ const server = net
       let aux = JSON.parse(data) // convert string(JSON) to obj
       const nicknames = waitList.map(user => user.nickname)
 
-      let challenger, challenged
       switch (aux.type) {
         case MessageTypes.newUser:
           // check if list is empty
@@ -57,38 +57,56 @@ const server = net
           }
           break
         case MessageTypes.move:
+          let challenger, challenged
+          let positionArray = 0
           // Looking for players on playingList
           for (var i in playingList) {
             const found = playingList[i].find(user => user.socket === socket)
             if (found) {
               challenger = found
               challenged = playingList[i].find(user => user.socket !== socket)
+              positionArray = i
               break
             }
           }
           // returns 1 if position is added, returns 2 if you have a winner, otherwise returns 0
-          switch (Matriz.addPosition(aux.payload, challenger.symbol)) {
+          const answer = Matriz.addPosition(aux.payload, challenger.symb)
+          switch (answer.type) {
             case 0:
               challenger.socket.write(MessageStructure.messageError(MessageTypes.denied))
               break
             case 1:
               challenger.socket.write(
-                MessageStructure.messageMove(MessageTypes.accepted, aux.payload)
+                MessageStructure.messageMove(MessageTypes.accepted, answer.array)
               )
               challenged.socket.write(
-                MessageStructure.messageMove(MessageTypes.asyncMove, aux.payload)
+                MessageStructure.messageMove(MessageTypes.asyncMove, answer.array)
               )
               break
             case 2:
-              challenger.socket.write(
-                MessageStructure.messageMove(MessageTypes.endGame, challenger.nickname, aux.payload)
-              )
+              swappingLists(challenger, challenged, positionArray)
+
+              const answerEnd = {
+                nickname: challenger.nickname,
+                array: answer.array
+              }
+
+              challenger.socket.write(MessageStructure.messageMove(MessageTypes.endGame, answerEnd))
               challenged.socket.write(
-                MessageStructure.messageMove(
-                  MessageTypes.asyncEndGame,
-                  challenger.nickname,
-                  aux.payload
-                )
+                MessageStructure.messageMove(MessageTypes.asyncEndGame, answerEnd)
+              )
+              break
+            case 3:
+              swappingLists(challenger, challenged, positionArray)
+
+              const answerTie = {
+                nickname: undefined,
+                array: answer.array
+              }
+
+              challenger.socket.write(MessageStructure.messageMove(MessageTypes.endGame, answerTie))
+              challenged.socket.write(
+                MessageStructure.messageMove(MessageTypes.asyncEndGame, answerTie)
               )
               break
           }
@@ -153,3 +171,11 @@ process.once(
     process.kill(process.pid, signal)
   })
 )
+
+function swappingLists(myChallenger, myChallenged, myPositionArray) {
+  playingList.splice(myPositionArray, 1)
+  delete myChallenger.symb
+  waitList.push(myChallenger)
+  delete myChallenged.symb
+  waitList.push(myChallenged)
+}
