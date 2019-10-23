@@ -91,15 +91,15 @@ async function challengePlayer(element) {
   const index = element.closest('tr').rowIndex
   opponentNick = document.getElementById('players-table-id').rows[index].cells[0].innerHTML
 
-  const req = await req.Request({
+  const res = await req.request({
     type: MessageTypes.start,
     payload: opponentNick
   })
 
   console.log(res)
 
-  if (res.type === MessageTypes.accepted) {
-    opponent = res.payload
+  if (res.message === MessageTypes.accepted) {
+    opponent = res.nickname
     const url = path.resolve(__dirname, 'game.html')
     currentWindow.loadURL(`file://${url}`)
   } else {
