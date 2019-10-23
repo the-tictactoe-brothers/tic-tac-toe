@@ -41,7 +41,8 @@ function initGame() {
     const [x, y] = message.payload
     console.log(x, y)
     const slot = document.getElementById(`slot-${x}-${y}`)
-    const shape = remote.getGlobal('shared').username === 'jose' ? 'cross' : 'circle'
+    const symb = remote.getGlobal('shared').opponent.symbol
+    const shape = symb === 'x' ? 'cross' : 'circle'
     slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
     slot.style.backgroundColor = '#cdcdcd'
     slot.onclick = undefined
@@ -52,13 +53,14 @@ function initGame() {
 
   req.registerAsyncCallback(MessageTypes.asyncEndGame, message => {
     // console.log(`Received oponentMove:`, message)
-    const [x, y] = message.payload
-    console.log(x, y)
-    const slot = document.getElementById(`slot-${x}-${y}`)
-    const shape = remote.getGlobal('shared').username === 'jose' ? 'cross' : 'circle'
-    slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
-    slot.style.backgroundColor = '#cdcdcd'
-    slot.onclick = undefined
+    // const [x, y] = message.payload
+    // console.log(x, y)
+    // const slot = document.getElementById(`slot-${x}-${y}`)
+    // const symb = remote.getGlobal('shared').player.symbol
+    // const shape = symb === 'x' ? 'cross' : 'circle'
+    // slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+    // slot.style.backgroundColor = '#cdcdcd'
+    // slot.onclick = undefined
     onEndGame()
   })
 }
@@ -104,17 +106,16 @@ async function onClick(e) {
   const groups = regex.exec(id)
   groups.shift()
   const [x, y] = groups
-  const username = remote.getGlobal('shared').username
   const res = await req.request({
     type: MessageTypes.move,
-    targetUser: username === 'joao' ? 'jose' : 'joao',
     payload: [x, y]
   })
   console.log(x, y)
 
   // add image
   const slot = document.getElementById(id)
-  const shape = username === 'joao' ? 'cross' : 'circle'
+  const symb = remote.getGlobal('shared').player.symbol
+  const shape = symb === 'x' ? 'cross' : 'circle'
   slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
   slot.style.backgroundColor = '#cdcdcd'
   slot.onclick = undefined
