@@ -98,7 +98,7 @@ async function challengePlayer(element) {
 
   console.log(res)
 
-  if (res.message === MessageTypes.accepted) {
+  if (res.type === MessageTypes.accepted) {
     opponent = res.nickname
     const url = path.resolve(__dirname, 'game.html')
     currentWindow.loadURL(`file://${url}`)
