@@ -6,9 +6,7 @@ const MessageTypes = remote.getGlobal('shared').MessageTypes
 const currentWindow = remote.getCurrentWindow()
 const req = remote.getGlobal('shared').req
 
-let opponent
-let player
-
+let itsPlayerTurn = true
 async function addNewUser(evt) {
   evt.preventDefault()
   const res = await req.request({
@@ -19,9 +17,9 @@ async function addNewUser(evt) {
   const nickForm = document.getElementById('nick-form')
   if (res.type === MessageTypes.accepted) {
     const url = path.resolve(__dirname, 'html/matchmake.html')
+    remote.getGlobal('shared').player = res.nickname
     currentWindow.loadURL(`file://${url}`)
     console.log(res.nickname)
-    remote.getGlobal('shared').username = res.nickname
   } else {
     const errorMessage = document.createElement('p')
     errorMessage.style.color = 'red'
@@ -49,6 +47,7 @@ function initGame() {
     slot.onclick = undefined
     setBoardLocked(false)
     changeTurn(true)
+    switchTurn(`slot-${x}-${y}`)
   })
 
   req.registerAsyncCallback(MessageTypes.asyncEndGame, message => {
@@ -86,9 +85,17 @@ function setBoardLocked(locked) {
   d.style.pointerEvents = locked ? 'none' : ''
 }
 
-function changeTurn(myTurn) {
+function switchTurn(slotId) {
   const turnDiv = document.getElementById('turn-result-div')
-  turnDiv.innerHTML = myTurn ? "It's your turn" : "Opponent's turn"
+  itsPlayerTurn = !itsPlayerTurn
+  turnDiv.innerHTML = itsPlayerTurn ? "It's your turn" : "Opponent's turn"
+
+  const slot = document.getElementById(slotId)
+  const shape = remote.getGlobal('shared').player.symbol === 'x' ? 'cross' : 'circle'
+  slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+  slot.style.backgroundColor = '#cdcdcd'
+  slot.onclick = undefined
+  // setBoardLocked(!itsPlayerTurn)
 }
 
 async function onClick(e) {
@@ -113,7 +120,10 @@ async function onClick(e) {
   slot.onclick = undefined
   setBoardLocked(true)
   changeTurn(false)
-  console.log(`Server's response for ${username}: ${res.type}`)
+  // console.log(`Server's response for ${username}: ${res.type}`)
+  switchTurn(id)
+  // setBoardLocked(false)
+  // console.log(`Server's response for ${player}: ${res.type}`)
 }
 
 async function getUsersList() {
@@ -125,7 +135,7 @@ async function getUsersList() {
 }
 
 async function populateUserList() {
-  users = await getUsersList()
+  const users = await getUsersList()
   for (const i in users) {
     const inner = i == 0 ? ' self">You' : ' oponent" onclick="challengePlayer(this)">Challenge'
 
@@ -145,6 +155,8 @@ async function populateUserList() {
     console.log(message)
     const url = path.resolve(__dirname, 'game.html')
     currentWindow.loadURL(`file://${url}`)
+    console.log('asyncStartGame:', message)
+    onStartGame(message)
   })
 }
 
@@ -163,7 +175,22 @@ async function challengePlayer(element) {
     opponent = res.nickname
     const url = path.resolve(__dirname, 'game.html')
     currentWindow.loadURL(`file://${url}`)
+    console.log('sync start:', res)
+    onStartGame(res)
   } else {
     alert('Failed to start game')
   }
+}
+
+function onStartGame(message) {
+  const op = message.payload
+  remote.getGlobal('shared').opponent = op
+  const nickname = remote.getGlobal('shared').player
+  const symbol = op.symbol === 'x' ? 'o': 'x'
+  remote.getGlobal('shared').player = {
+    nickname,
+    symbol
+  }
+  const url = path.resolve(__dirname, 'game.html')
+  currentWindow.loadURL(`file://${url}`)
 }

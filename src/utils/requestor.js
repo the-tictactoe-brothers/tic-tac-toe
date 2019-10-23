@@ -37,6 +37,7 @@ class Requestor {
       this.socket.once('data', data => {
         const response = JSON.parse(data.toLocaleString())
         if (!this.events.includes(response.type)) {
+          console.log('sync:', response)
           resolve(response)
         }
       })
