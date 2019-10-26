@@ -71,21 +71,37 @@ function initGame() {
 }
 
 function onEndGame(positions, winner) {
-  for (let i in positions){
-    console.log(positions[i])
-    const [x,y] = positions[i]
+  // Receives [x,y] is tie and [[x,y],[w,z],[a,b]] if not
+  let tie = false
+  if (positions.length === 2){
+    const [x,y] = positions
     const slot = document.getElementById(`slot-${x}-${y}`)
-    const symb = remote.getGlobal('shared').player.symbol
+    // Makes no sense at first, but winner is always false if it comes from async
+    const symb = winner ? remote.getGlobal('shared').player.symbol : remote.getGlobal('shared').opponent.symbol
     const shape = symb === 'x' ? 'cross' : 'circle'
     slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
-    slot.style.backgroundColor = winner ? '#99ff33' : '#ff3c3c'
+    slot.style.backgroundColor = '#ff3c3c'
+    winner = false
+    tie = true
+
+  }else{
+    for (let i in positions){
+      const [x,y] = positions[i]
+      const slot = document.getElementById(`slot-${x}-${y}`)
+      // Makes no sense at first, but winner is always false if it comes from async
+      const symb = winner ? remote.getGlobal('shared').player.symbol : remote.getGlobal('shared').opponent.symbol
+      const shape = symb === 'x' ? 'cross' : 'circle'
+      slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+      slot.style.backgroundColor = winner ? '#99ff33' : '#ff3c3c'
+    }
   }
 
   const turn = document.getElementById('turn-result-div')
   const game = document.getElementById('game-board')
   const final = document.getElementById('game-name-rematch')
 
-  turn.innerHTML = winner ? 'You win' : 'You lose'
+  turn.innerHTML = (tie ? "It's a tie" :
+                    winner ? 'You win' : 'You lose')
   game.style.boxShadow = winner ? '10px 10px 10px 10px #99ff33' : '10px 10px 10px 10px #ff3c3c'
   final.innerHTML = `<label id="exit">Game Over</label>`
 
