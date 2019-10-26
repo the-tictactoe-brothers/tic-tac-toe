@@ -52,11 +52,14 @@ function addPosition(position, symb) {
   }
 }
 
-function rmvPosition(position) {
-  let x = position[0]
-  let y = position[1]
+function resetMatrix() {
+  count = 0
 
-  matriz[x][y] = undefined
+  for (let i = 0; i < matriz.length; i++) {
+    for (let j = 0; j < matriz.length; j++) {
+      matriz[i][j] = undefined
+    }
+  }
 }
 
 function verify(position, symb) {
@@ -116,6 +119,6 @@ function verify(position, symb) {
 module.exports = {
   addPosition,
   printMatriz,
-  rmvPosition,
+  resetMatrix,
   verify
 }

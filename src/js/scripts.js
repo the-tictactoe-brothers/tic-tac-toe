@@ -46,8 +46,8 @@ function initGame() {
     const [x, y] = message.payload
     console.log(x, y)
     const slot = document.getElementById(`slot-${x}-${y}`)
-    const symb = remote.getGlobal('shared').opponent.symbol
-    const shape = symb === 'x' ? 'cross' : 'circle'
+    const symbol = remote.getGlobal('shared').opponent.symbol
+    const shape = symbol === 'x' ? 'cross' : 'circle'
     slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
     slot.style.backgroundColor = '#cdcdcd'
     slot.onclick = undefined
@@ -61,8 +61,8 @@ function initGame() {
     // const [x, y] = message.payload
     // console.log(x, y)
     // const slot = document.getElementById(`slot-${x}-${y}`)
-    // const symb = remote.getGlobal('shared').player.symbol
-    // const shape = symb === 'x' ? 'cross' : 'circle'
+    // const symbol = remote.getGlobal('shared').player.symbol
+    // const shape = symbol === 'x' ? 'cross' : 'circle'
     // slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
     // slot.style.backgroundColor = '#cdcdcd'
     // slot.onclick = undefined
@@ -77,8 +77,8 @@ function onEndGame(positions, winner) {
     const [x,y] = positions
     const slot = document.getElementById(`slot-${x}-${y}`)
     // Makes no sense at first, but winner is always false if it comes from async
-    const symb = winner ? remote.getGlobal('shared').player.symbol : remote.getGlobal('shared').opponent.symbol
-    const shape = symb === 'x' ? 'cross' : 'circle'
+    const symbol = winner ? remote.getGlobal('shared').player.symbol : remote.getGlobal('shared').opponent.symbol
+    const shape = symbol === 'x' ? 'cross' : 'circle'
     slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
     slot.style.backgroundColor = '#ff3c3c'
     winner = false
@@ -89,8 +89,8 @@ function onEndGame(positions, winner) {
       const [x,y] = positions[i]
       const slot = document.getElementById(`slot-${x}-${y}`)
       // Makes no sense at first, but winner is always false if it comes from async
-      const symb = winner ? remote.getGlobal('shared').player.symbol : remote.getGlobal('shared').opponent.symbol
-      const shape = symb === 'x' ? 'cross' : 'circle'
+      const symbol = winner ? remote.getGlobal('shared').player.symbol : remote.getGlobal('shared').opponent.symbol
+      const shape = symbol === 'x' ? 'cross' : 'circle'
       slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
       slot.style.backgroundColor = winner ? '#99ff33' : '#ff3c3c'
     }
@@ -169,8 +169,8 @@ async function onClick(e) {
   }else if (res.type === MessageTypes.accepted){
     // add image
     const slot = document.getElementById(id)
-    const symb = remote.getGlobal('shared').player.symbol
-    const shape = symb === 'x' ? 'cross' : 'circle'
+    const symbol = remote.getGlobal('shared').player.symbol
+    const shape = symbol === 'x' ? 'cross' : 'circle'
     slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
     slot.style.backgroundColor = '#cdcdcd'
     slot.onclick = undefined
