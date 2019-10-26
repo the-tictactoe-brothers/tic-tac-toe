@@ -85,6 +85,7 @@ const server = net
               break
             case 2:
               swappingLists(challenger, challenged, positionArray)
+              Matriz.resetMatrix()
 
               const answerEnd = {
                 nickname: challenger.nickname,
@@ -98,6 +99,7 @@ const server = net
               break
             case 3:
               swappingLists(challenger, challenged, positionArray)
+              Matriz.resetMatrix()
 
               const answerTie = {
                 nickname: undefined,
@@ -175,8 +177,8 @@ process.once(
 
 function swappingLists(myChallenger, myChallenged, myPositionArray) {
   playingList.splice(myPositionArray, 1)
-  delete myChallenger.symb
+  delete myChallenger.symbol
   waitList.push(myChallenger)
-  delete myChallenged.symb
+  delete myChallenged.symbol
   waitList.push(myChallenged)
 }

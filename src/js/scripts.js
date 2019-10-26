@@ -7,6 +7,7 @@ const currentWindow = remote.getCurrentWindow()
 const req = remote.getGlobal('shared').req
 
 let itsPlayerTurn = true
+
 async function addNewUser(evt) {
   evt.preventDefault()
   const res = await req.request({
@@ -36,19 +37,23 @@ async function addNewUser(evt) {
 
 function initGame() {
   createGrid(3, 3)
+  opponentNick = remote.getGlobal('shared').opponent.nickname
+  document.getElementById('opponent-div').innerHTML = `Opponent: ${opponentNick}`
+  document.getElementById('turn-result-div').innerHTML = 'Wooever plays first starts'
+
   req.registerAsyncCallback(MessageTypes.asyncMove, message => {
     // console.log(`Received oponentMove:`, message)
     const [x, y] = message.payload
     console.log(x, y)
     const slot = document.getElementById(`slot-${x}-${y}`)
-    const symb = remote.getGlobal('shared').opponent.symbol
-    const shape = symb === 'x' ? 'cross' : 'circle'
+    const symbol = remote.getGlobal('shared').opponent.symbol
+    const shape = symbol === 'x' ? 'cross' : 'circle'
     slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
     slot.style.backgroundColor = '#cdcdcd'
     slot.onclick = undefined
     setBoardLocked(false)
     switchTurn(true)
-    switchTurn(`slot-${x}-${y}`)
+    // switchTurn(`slot-${x}-${y}`)
   })
 
   req.registerAsyncCallback(MessageTypes.asyncEndGame, message => {
@@ -56,16 +61,63 @@ function initGame() {
     // const [x, y] = message.payload
     // console.log(x, y)
     // const slot = document.getElementById(`slot-${x}-${y}`)
-    // const symb = remote.getGlobal('shared').player.symbol
-    // const shape = symb === 'x' ? 'cross' : 'circle'
+    // const symbol = remote.getGlobal('shared').player.symbol
+    // const shape = symbol === 'x' ? 'cross' : 'circle'
     // slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
     // slot.style.backgroundColor = '#cdcdcd'
     // slot.onclick = undefined
-    onEndGame()
+    onEndGame(message.payload.array, false)
   })
 }
 
-function onEndGame() {
+function onEndGame(positions, winner) {
+  // Receives [x,y] is tie and [[x,y],[w,z],[a,b]] if not
+  let tie = false
+  if (positions.length === 2){
+    const [x,y] = positions
+    const slot = document.getElementById(`slot-${x}-${y}`)
+    // Makes no sense at first, but winner is always false if it comes from async
+    const symbol = winner ? remote.getGlobal('shared').player.symbol : remote.getGlobal('shared').opponent.symbol
+    const shape = symbol === 'x' ? 'cross' : 'circle'
+    slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+    slot.style.backgroundColor = '#ff3c3c'
+    winner = false
+    tie = true
+
+  }else{
+    for (let i in positions){
+      const [x,y] = positions[i]
+      const slot = document.getElementById(`slot-${x}-${y}`)
+      // Makes no sense at first, but winner is always false if it comes from async
+      const symbol = winner ? remote.getGlobal('shared').player.symbol : remote.getGlobal('shared').opponent.symbol
+      const shape = symbol === 'x' ? 'cross' : 'circle'
+      slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+      slot.style.backgroundColor = winner ? '#99ff33' : '#ff3c3c'
+    }
+  }
+
+  const turn = document.getElementById('turn-result-div')
+  const game = document.getElementById('game-board')
+  const final = document.getElementById('game-name-rematch')
+
+  turn.innerHTML = (tie ? "It's a tie" :
+                    winner ? 'You win' : 'You lose')
+  game.style.boxShadow = winner ? '10px 10px 10px 10px #99ff33' : '10px 10px 10px 10px #ff3c3c'
+  final.innerHTML = `<label id="exit">Game Over</label>`
+
+  let sec = 5
+  setInterval(() => {
+    document.getElementById('exit').innerHTML = (sec != 0) ? `Exiting in ${sec}` : `Exiting ...`
+    sec--
+  }, 1000)
+
+  setTimeout(() => {
+    remote.getGlobal('shared').player = remote.getGlobal('shared').player.nickname
+    remote.getGlobal('shared').opponent = {}
+    const url = path.resolve(__dirname, 'matchmake.html')
+    currentWindow.loadURL(`file://${url}`)
+  }, 6000)
+
   setBoardLocked(false)
 }
 
@@ -87,16 +139,16 @@ function setBoardLocked(locked) {
   d.style.pointerEvents = locked ? 'none' : ''
 }
 
-function switchTurn(slotId) {
+function switchTurn(myTurn) {
   const turnDiv = document.getElementById('turn-result-div')
-  itsPlayerTurn = !itsPlayerTurn
+  itsPlayerTurn = myTurn ? true : false
   turnDiv.innerHTML = itsPlayerTurn ? "It's your turn" : "Opponent's turn"
 
-  const slot = document.getElementById(slotId)
-  const shape = remote.getGlobal('shared').player.symbol === 'x' ? 'cross' : 'circle'
-  slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
-  slot.style.backgroundColor = '#cdcdcd'
-  slot.onclick = undefined
+  // const slot = document.getElementById(slotId)
+  // const shape = remote.getGlobal('shared').player.symbol === 'x' ? 'cross' : 'circle'
+  // slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+  // slot.style.backgroundColor = '#cdcdcd'
+  // slot.onclick = undefined
   // setBoardLocked(!itsPlayerTurn)
 }
 
@@ -112,16 +164,22 @@ async function onClick(e) {
   })
   console.log(x, y)
 
-  // add image
-  const slot = document.getElementById(id)
-  const symb = remote.getGlobal('shared').player.symbol
-  const shape = symb === 'x' ? 'cross' : 'circle'
-  slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
-  slot.style.backgroundColor = '#cdcdcd'
-  slot.onclick = undefined
-  setBoardLocked(true)
-  switchTurn(false)
-  switchTurn(id)
+  if (res.type === MessageTypes.endGame){
+    onEndGame(res.payload.array, true)
+  }else if (res.type === MessageTypes.accepted){
+    // add image
+    const slot = document.getElementById(id)
+    const symbol = remote.getGlobal('shared').player.symbol
+    const shape = symbol === 'x' ? 'cross' : 'circle'
+    slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+    slot.style.backgroundColor = '#cdcdcd'
+    slot.onclick = undefined
+    setBoardLocked(true)
+    switchTurn(false)
+    // switchTurn(id)
+  }else {
+    alert('Invalid position')
+  }
 }
 
 async function getUsersList() {
@@ -171,8 +229,6 @@ async function challengePlayer(element) {
 
   if (res.type === MessageTypes.accepted) {
     opponent = res.nickname
-    const url = path.resolve(__dirname, 'game.html')
-    currentWindow.loadURL(`file://${url}`)
     console.log('sync start:', res)
     onStartGame(res)
   } else {
