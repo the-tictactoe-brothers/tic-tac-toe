@@ -37,6 +37,8 @@ async function addNewUser(evt) {
 
 function initGame() {
   createGrid(3, 3)
+  document.getElementById('turn-result-div').innerHTML = 'Wooever plays first starts'
+
   req.registerAsyncCallback(MessageTypes.asyncMove, message => {
     // console.log(`Received oponentMove:`, message)
     const [x, y] = message.payload
