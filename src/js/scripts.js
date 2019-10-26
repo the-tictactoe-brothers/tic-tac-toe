@@ -87,6 +87,20 @@ function onEndGame(positions, winner) {
 
   turn.innerHTML = winner ? 'You win' : 'You lose'
   game.style.boxShadow = winner ? '10px 10px 10px 10px #99ff33' : '10px 10px 10px 10px #ff3c3c'
+  final.innerHTML = `<label id="exit">Game Over</label>`
+
+  let sec = 5
+  setInterval(() => {
+    document.getElementById('exit').innerHTML = (sec != 0) ? `Exiting in ${sec}` : `Exiting ...`
+    sec--
+  }, 1000)
+
+  setTimeout(() => {
+    remote.getGlobal('shared').player = remote.getGlobal('shared').player.nickname
+    remote.getGlobal('shared').opponent = {}
+    const url = path.resolve(__dirname, 'matchmake.html')
+    currentWindow.loadURL(`file://${url}`)
+  }, 6000)
 
   setBoardLocked(false)
 }
