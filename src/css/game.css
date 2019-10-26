@@ -49,6 +49,7 @@ body {
   border: 1px solid #333333;
   border-radius: 2% 6% 5% 4% / 1% 1% 2% 4%;
   letter-spacing: 0.1ch;
+  position: relative
 }
 
 #opponent-div {
@@ -98,3 +99,7 @@ body {
   border-radius: 2% 6% 5% 4% / 1% 1% 2% 4%;
 }
 
+#exit {
+  font-family: cursive;
+  letter-spacing: 0.1ch
+}

@@ -80,10 +80,14 @@ function onEndGame(positions, winner) {
     slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
     slot.style.backgroundColor = winner ? '#99ff33' : '#ff3c3c'
   }
+
   const turn = document.getElementById('turn-result-div')
-  turn.innerHTML = winner ? 'You win' : 'You lose'
+  const game = document.getElementById('game-board')
   const final = document.getElementById('game-name-rematch')
-  final.innerHTML = 'Rematch<br/>Exit'
+
+  turn.innerHTML = winner ? 'You win' : 'You lose'
+  game.style.boxShadow = winner ? '10px 10px 10px 10px #99ff33' : '10px 10px 10px 10px #ff3c3c'
+
   setBoardLocked(false)
 }
 
@@ -195,8 +199,6 @@ async function challengePlayer(element) {
 
   if (res.type === MessageTypes.accepted) {
     opponent = res.nickname
-    const url = path.resolve(__dirname, 'game.html')
-    currentWindow.loadURL(`file://${url}`)
     console.log('sync start:', res)
     onStartGame(res)
   } else {
