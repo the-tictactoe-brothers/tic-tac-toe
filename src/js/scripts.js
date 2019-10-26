@@ -7,6 +7,7 @@ const currentWindow = remote.getCurrentWindow()
 const req = remote.getGlobal('shared').req
 
 let itsPlayerTurn = true
+
 async function addNewUser(evt) {
   evt.preventDefault()
   const res = await req.request({
@@ -48,7 +49,7 @@ function initGame() {
     slot.onclick = undefined
     setBoardLocked(false)
     switchTurn(true)
-    switchTurn(`slot-${x}-${y}`)
+    // switchTurn(`slot-${x}-${y}`)
   })
 
   req.registerAsyncCallback(MessageTypes.asyncEndGame, message => {
@@ -61,11 +62,24 @@ function initGame() {
     // slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
     // slot.style.backgroundColor = '#cdcdcd'
     // slot.onclick = undefined
-    onEndGame()
+    onEndGame(message.payload.array, false)
   })
 }
 
-function onEndGame() {
+function onEndGame(positions, winner) {
+  for (let i in positions){
+    console.log(positions[i])
+    const [x,y] = positions[i]
+    const slot = document.getElementById(`slot-${x}-${y}`)
+    const symb = remote.getGlobal('shared').player.symbol
+    const shape = symb === 'x' ? 'cross' : 'circle'
+    slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+    slot.style.backgroundColor = winner ? '#99ff33' : '#ff3c3c'
+  }
+  const turn = document.getElementById('turn-result-div')
+  turn.innerHTML = winner ? 'You win' : 'You lose'
+  const final = document.getElementById('game-name-rematch')
+  final.innerHTML = 'Rematch<br/>Exit'
   setBoardLocked(false)
 }
 
@@ -87,16 +101,16 @@ function setBoardLocked(locked) {
   d.style.pointerEvents = locked ? 'none' : ''
 }
 
-function switchTurn(slotId) {
+function switchTurn(myTurn) {
   const turnDiv = document.getElementById('turn-result-div')
-  itsPlayerTurn = !itsPlayerTurn
+  itsPlayerTurn = myTurn ? true : false
   turnDiv.innerHTML = itsPlayerTurn ? "It's your turn" : "Opponent's turn"
 
-  const slot = document.getElementById(slotId)
-  const shape = remote.getGlobal('shared').player.symbol === 'x' ? 'cross' : 'circle'
-  slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
-  slot.style.backgroundColor = '#cdcdcd'
-  slot.onclick = undefined
+  // const slot = document.getElementById(slotId)
+  // const shape = remote.getGlobal('shared').player.symbol === 'x' ? 'cross' : 'circle'
+  // slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+  // slot.style.backgroundColor = '#cdcdcd'
+  // slot.onclick = undefined
   // setBoardLocked(!itsPlayerTurn)
 }
 
@@ -112,16 +126,22 @@ async function onClick(e) {
   })
   console.log(x, y)
 
-  // add image
-  const slot = document.getElementById(id)
-  const symb = remote.getGlobal('shared').player.symbol
-  const shape = symb === 'x' ? 'cross' : 'circle'
-  slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
-  slot.style.backgroundColor = '#cdcdcd'
-  slot.onclick = undefined
-  setBoardLocked(true)
-  switchTurn(false)
-  switchTurn(id)
+  if (res.type === MessageTypes.endGame){
+    onEndGame(res.payload.array, true)
+  }else if (res.type === MessageTypes.accepted){
+    // add image
+    const slot = document.getElementById(id)
+    const symb = remote.getGlobal('shared').player.symbol
+    const shape = symb === 'x' ? 'cross' : 'circle'
+    slot.style.background = `url(../assets/${shape}.png) no-repeat center center`
+    slot.style.backgroundColor = '#cdcdcd'
+    slot.onclick = undefined
+    setBoardLocked(true)
+    switchTurn(false)
+    // switchTurn(id)
+  }else {
+    alert('Invalid position')
+  }
 }
 
 async function getUsersList() {
