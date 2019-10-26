@@ -37,6 +37,8 @@ async function addNewUser(evt) {
 
 function initGame() {
   createGrid(3, 3)
+  opponentNick = remote.getGlobal('shared').opponent.nickname
+  document.getElementById('opponent-div').innerHTML = `Opponent: ${opponentNick}`
   document.getElementById('turn-result-div').innerHTML = 'Wooever plays first starts'
 
   req.registerAsyncCallback(MessageTypes.asyncMove, message => {
